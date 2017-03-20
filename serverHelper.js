@@ -33,56 +33,6 @@ exports.changeTile = function(x, y, tile){
   }
 }
 
-function makeLineOfTiles(x1, y1, x2, y2, tile){
-  var smaller, larger;
-  if(y1 == y2){
-    //find the smaller x value
-    if(x1 < x2){
-      smaller = x1;
-      larger = x2;
-    }
-    else{
-      smaller = x2;
-      larger = x1;
-    }
-    //create loop to change tiles or add tiles
-    while(smaller < larger){
-      if(map[smaller][y1] == null){
-        addTile(smaller, y1);
-        smaller++;
-      }
-      else{
-        changeTile(smaller, y1);
-        smaller++;
-      }
-    }
-  }
-  else if(x1 == x2){
-    //find the smaller y value
-    if(y1 < y2){
-      smaller = y1;
-      larger = y2;
-    }
-    else{
-      smaller = y2;
-      larger = y1;
-    }
-    while(smaller < larger){
-      if(map[smaller][y1] == null){
-        addTile(x1, smaller);
-        smaller++;
-      }
-      else{
-        changeTile(x1, smaller);
-        smaller++;
-      }
-    }
-  }
-  else{
-    reportErr("line not in bounds");
-  }
-}
-
 exports.changeTiles = function(arrayOfPositions){
   arrayOfPositions.map(function(each){
     if(each == null){

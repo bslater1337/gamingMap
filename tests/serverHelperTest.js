@@ -47,9 +47,16 @@ describe("serverHelper", function(){
     assert(map[1][1] == "testTile");
   });
 
+  it("should fail to remove a tile from a map", function(){
+    var map = setupMap(null);
+
+    serverHelper.removeTile(1,1);
+    assert(map[1][1] == null);
+  });
 
   it("should remove a tile from a map", function(){
     var map = setupMap(null);
+
     serverHelper.addTile(1,1,"testTile");
     assert(map[1][1] == "testTile");
 
@@ -74,6 +81,11 @@ describe("serverHelper", function(){
 
     serverHelper.changeTiles(startTiles);
     startTiles.map(function(each){
+      assert(map[each.x][each.y] == each.tile);
+    });
+
+    serverHelper.changeTiles(secondTiles);
+    secondTiles.map(function(each){
       assert(map[each.x][each.y] == each.tile);
     });
   });
