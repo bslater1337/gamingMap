@@ -1,6 +1,6 @@
 
 
-var basicGround = {
+exports.basicGround = {
   var difficultTurrain = false;
   var color = "green";
   var transparent = true;
@@ -9,7 +9,7 @@ var basicGround = {
   var hasToken = false;
 }
 
-var basicWall = {
+exports.basicWall = {
   var difficultTurrain = false;
   var color = "gray";
   var transparent = false;
@@ -18,9 +18,21 @@ var basicWall = {
   var hasToken = false;
 }
 
-var token = {
+exports.token = {
   var name = "needs name";
-  var movement = 30;
+  var movementSpeed = 5;
   var x = 0;
   var y = 0;
+  var move = function(arrayOfTiles){
+    var isLegal = true;
+    isLegal = arrayOfTiles.map(function(each){
+      if(each.canMoveThrough){
+
+      }
+      else{
+        isLegal = false;
+      }
+    });
+    return isLegal;
+  }
 }
