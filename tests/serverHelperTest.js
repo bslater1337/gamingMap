@@ -20,13 +20,13 @@ function setupMap(token){
 function createChangesArray(length, token){
   var arr = []
   for(var i = 0; i < length; i++){
-    {
-      var x = Math.floor(Math.random()*100);
-      var y = Math.floor(Math.random()*100);
-      var tile = token;
-
+    var temp = {
+      x : Math.floor(Math.random()*100),
+      y : Math.floor(Math.random()*100),
+      tile : token
     }
   }
+  return arr;
 }
 
 describe("serverHelper", function(){
