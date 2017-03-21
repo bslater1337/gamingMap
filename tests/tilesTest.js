@@ -60,7 +60,7 @@ describe("tiles", function(){
   it("should be able to hold a token", function(){
     var map = setupMap(null);
     serverHelper.addTile(1,1, tile.basicGround);
-    var tok = tile.basicToken
+    var tok = tile.token
     map[1][1].token = tok;
     assert(map[1][1].token == tok);
   });
@@ -68,10 +68,9 @@ describe("tiles", function(){
   it("should be able to move a token to a position", function(){
     var map = setupMap(tile.basicGround);
     var moveArr = [map[0][0], map[1][1]];
-    var tok = tile.basicToken;
+    var tok =  tile.token;
     tok.move(moveArr);
-    //console.log(tok.canMove(moveArr));
-    assert(map[1][1] == tok)
+    assert(map[1][1].token == tok);
   });
 
 });

@@ -17,13 +17,11 @@ var basicGround = {
    token : null
 }
 exports.basicGround =  basicGround;
-exports.basicWall =  basicWall
+exports.basicWall =  basicWall;
 
 var basicToken = {
    name : "unnamed token",
    movementSpeed : 5,
-   x : 0,
-   y : 0,
    canMove : function(arrayOfTiles){
     var isLegal = true;
     arrayOfTiles.map(function(each){
@@ -34,10 +32,10 @@ var basicToken = {
     return isLegal;
   },
   move : function(arrayOfTiles){
-    if(canMove(arrayOfTiles)){
+    if(this.canMove(arrayOfTiles)){
       arrayOfTiles[0].token = null;
-      arrayOfTiles[arrayOfTiles.length -1].token = this
+      arrayOfTiles[arrayOfTiles.length -1].token = this;
     }
   }
 }
-exports.token =  basicToken
+exports.token =  basicToken;
