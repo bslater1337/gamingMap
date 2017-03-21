@@ -65,12 +65,23 @@ describe("tiles", function(){
     assert(map[1][1].token == tok);
   });
 
-  it("should be able to move a token to a position", function(){
+  it("should be able to move a token to a position with correct tiles", function(){
     var map = setupMap(tile.basicGround);
     var moveArr = [map[0][0], map[1][1]];
     var tok =  tile.token;
+    map[0][0].token = tok;
     tok.move(moveArr);
     assert(map[1][1].token == tok);
+  });
+
+  it("should not be able to move token to a new position with incorrect tiles", function(){
+    var map = setupMap(tile.basicWall);
+    var moveArr = [map[0][0], map[1][1]];
+    var tok = tile.token;
+    serverHelper.changeTile(0,0,tile.basicGround);
+    map[0][0].token = tok;
+    tok.move(moveArr);
+    assert(map[1][1] != tok);
   });
 
 });
