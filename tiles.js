@@ -1,38 +1,43 @@
+//classes cannot be tested with mocha at this time due to googles v8 engine not having an implimentation
 
-
-exports.basicGround = {
-  var difficultTurrain = false;
-  var color = "green";
-  var transparent = true;
-  var canMoveThrough = true;
-  var size = 1;
-  var hasToken = false;
+var basicGround = {
+   difficultTurrain : false,
+   color : "green",
+   transparent : true,
+   canMoveThrough : true,
+   size : 1,
+   token : null
 }
-
-exports.basicWall = {
-  var difficultTurrain = false;
-  var color = "gray";
-  var transparent = false;
-  var canMoveThrough = false;
-  var size = 1;
-  var hasToken = false;
+ var basicWall = {
+   difficultTurrain : false,
+   color : "gray",
+   transparent : false,
+   canMoveThrough : false,
+   size : 1,
+   token : null
 }
+exports.basicGround =  basicGround;
+exports.basicWall =  basicWall
 
-exports.token = {
-  var name = "needs name";
-  var movementSpeed = 5;
-  var x = 0;
-  var y = 0;
-  var move = function(arrayOfTiles){
+var basicToken = {
+   name : "unnamed token",
+   movementSpeed : 5,
+   x : 0,
+   y : 0,
+   canMove : function(arrayOfTiles){
     var isLegal = true;
-    isLegal = arrayOfTiles.map(function(each){
-      if(each.canMoveThrough){
-
-      }
-      else{
+    arrayOfTiles.map(function(each){
+      if(!each.canMoveThrough){
         isLegal = false;
       }
     });
     return isLegal;
+  },
+  move : function(arrayOfTiles){
+    if(canMove(arrayOfTiles)){
+      arrayOfTiles[0].token = null;
+      arrayOfTiles[arrayOfTiles.length -1].token = this
+    }
   }
 }
+exports.token =  basicToken

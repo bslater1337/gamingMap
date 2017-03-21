@@ -1,8 +1,7 @@
 const mocha = require('mocha');
 const assert = require('assert');
 const serverHelper = require("../serverHelper");
-//const tile = require("../tiles.js");
-//This should set up the tests without testing the tile functionality
+const tile = require("../tiles.js");
 
 function setupMap(token){
   var map = serverHelper.map;
@@ -42,9 +41,9 @@ describe("serverHelper", function(){
 
   it("should add a tile to a map", function(){
     var map = setupMap(null);
-    serverHelper.addTile(1,1,"testTile");
+    serverHelper.addTile(1,1,tile.basicGround);
     //serverHelper.addTile(1,1,"testTile");
-    assert(map[1][1] == "testTile");
+    assert(map[1][1] == tile.basicGround);
   });
 
   it("should fail to remove a tile from a map", function(){
@@ -57,8 +56,8 @@ describe("serverHelper", function(){
   it("should remove a tile from a map", function(){
     var map = setupMap(null);
 
-    serverHelper.addTile(1,1,"testTile");
-    assert(map[1][1] == "testTile");
+    serverHelper.addTile(1,1,tile.basicGround);
+    assert(map[1][1] == tile.basicGround);
 
     serverHelper.removeTile(1,1);
     assert(map[1][1] == null);
@@ -66,18 +65,18 @@ describe("serverHelper", function(){
 
   it("should change a tile on the map", function(){
     var map = setupMap(null);
-    serverHelper.addTile(1,1,"testTile");
-    assert(map[1][1] == "testTile");
+    serverHelper.addTile(1,1,tile.basicGround);
+    assert(map[1][1] == tile.basicGround);
 
-    serverHelper.changeTile(1,1,"secondTestTile");
-    assert(map[1][1] == "secondTestTile");
+    serverHelper.changeTile(1,1,tile.basicWall);
+    assert(map[1][1] == tile.basicWall);
   });
 
 
   it("should change multiple tiles on a map", function(){
     var map = setupMap(null);
-    var startTiles = createChangesArray(100, "test");
-    var secondTiles = createChangesArray(100, "secondTest");
+    var startTiles = createChangesArray(100, tile.basicGround);
+    var secondTiles = createChangesArray(100, tile.basicWall);
 
     serverHelper.changeTiles(startTiles);
     startTiles.map(function(each){
