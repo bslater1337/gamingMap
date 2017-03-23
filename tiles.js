@@ -1,5 +1,44 @@
 //classes cannot be tested with mocha at this time due to googles v8 engine not having an implimentation
 
+class Board {
+    constructor() {
+        this.mapByTiles = new Map();
+        this.mapByCoords = new Map();
+    }
+
+    whereIsTile(tile) {
+        return this.mapByTiles(tile);
+    }
+
+    tileAtPosition(x, y)  {
+        return this.mapByCoords.get([x, y]);
+    }
+
+    addTileAt(x, y, tile) {
+        this.mapByTiles.set(tile, [x, y]);
+        this.mapByCoords.set([x, y], tile);
+    }
+}
+
+class Tile {
+    constructor(board, x, y)  {
+        this.board = board;
+        board.addTileAt(x, y, this);
+    }
+
+    get coords  {
+        return this.board.whereIsTile(this);
+    }
+
+    get x {
+        return this.coords[x];
+    }
+
+    get y {
+        return this.coords[1];
+    }
+}
+
 var basicGround = {
    difficultTurrain : false,
    color : "green",
