@@ -91,11 +91,11 @@ exports.Tile = class Tile {
 
     get neighbors() {
         let neighbors = this.board.findNeighbors(this);
-        return Array.concat(this.special_neighbors, neighbors);
+        return this.special_neighbors.concat(neighbors);
     }
 
     isNeighbor( possibleNeighbor){
-      let neighbors = this.board.findNeighbors(this);
+      let neighbors = this.neighbors;
       if(neighbors.indexOf(possibleNeighbor) != -1){
         return true;
       }
