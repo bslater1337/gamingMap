@@ -1,6 +1,6 @@
 //classes cannot be tested with mocha at this time due to googles v8 engine not having an implimentation
 
-class Board {
+exports.board = class Board {
     constructor() {
         this.mapByTiles = new Map();
         this.mapByCoords = new Map();
@@ -20,21 +20,21 @@ class Board {
     }
 }
 
-class Tile {
+exports.Tile = class Tile {
     constructor(board, x, y)  {
         this.board = board;
         board.addTileAt(x, y, this);
     }
 
-    get coords  {
+    get coords()  {
         return this.board.whereIsTile(this);
     }
 
-    get x {
-        return this.coords[x];
+    get x() {
+        return this.coords[0];
     }
 
-    get y {
+    get y() {
         return this.coords[1];
     }
 }

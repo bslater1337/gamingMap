@@ -4,13 +4,13 @@ const serverHelper = require("../serverHelper");
 const tile = require("../tiles.js");
 
 function setupMap(token){
-  var map = serverHelper.map;
+  var map = new tile.board;
   for(var i = 0; i < 100; i++){
     if (map[i] === undefined) {
       map[i] = [];
     }
     for(var j = 0; j < 100; j++){
-      map[i][j] = token;
+      map.addTileAt(i, j, token);
     }
   }
   return map;
@@ -29,32 +29,36 @@ function createChangesArray(length, token){
 }
 
 describe("tiles", function(){
-  it("should be a null map", function(){
+  it("should be a board filled with null tiles", function(){
     var map = setupMap(null);
 
     for(var i = 0; i < 100; i++){
       for(var j = 0; j < 100; j++){
-        assert(map[i][j] == null);
+        assert(map.tileAtPosition(i,j) == null);
       }
     }
   });
 
   it("should have the correct properties when added", function(){
     var map = setupMap(null);
-    serverHelper.addTile(1,1, tile.basicGround);
-    serverHelper.addTile(2,1, tile.basicWall);
+    map.addTileAt(1,1, tile.basicGround);
+    map.addTileAt(2,1, tile.basicWall);
+    console.log(map.tileAtPosition(1,1));
+    console.log(map.mapByCoords);
     //assert for basic ground
-    assert(map[1][1].difficultTurrain == false);
-    assert(map[1][1].transparent == true);
-    assert(map[1][1].canMoveThrough == true);
-    assert(map[1][1].size == 1);
-    assert(map[1][1].token == null);
+    /*
+    assert(map.tileAtPosition(1,1).difficultTurrain == false);
+    assert(map.tileAtPosition(1,1).transparent == true);
+    assert(map.tileAtPosition(1,1).canMoveThrough == true);
+    assert(map.tileAtPosition(1,1).size == 1);
+    assert(map.tileAtPosition(1,1).token == null);
     //assert for basic wall
-    assert(map[2][1].difficultTurrain == false);
-    assert(map[2][1].transparent == false);
-    assert(map[2][1].canMoveThrough == false);
-    assert(map[2][1].size == 1);
-    assert(map[2][1].token == null);
+    assert(map.tileAtPosition(2,1).difficultTurrain == false);
+    assert(map.tileAtPosition(2,1).transparent == false);
+    assert(map.tileAtPosition(2,1).canMoveThrough == false);
+    assert(map.tileAtPosition(2,1).size == 1);
+    assert(map.tileAtPosition(2,1).token == null);
+    */
   });
 
   it("should be able to hold a token", function(){
