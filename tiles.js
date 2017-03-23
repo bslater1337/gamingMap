@@ -54,11 +54,28 @@ exports.board = class Board {
         }
       });
     }
+
+    findNeighbors(tile){
+      let coords = this.whereIsTile(tile);
+      let modifiers = [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1]
+      ];
+      let neighbors = [];
+      for (let mod of modifiers)  {
+        if(tileAtPosition(coords[0] + mod[0], coords[1] + mod[1]) !== undefined){
+          neighbors.push(tileAtPosition(coords[0] + mod[0], coords[1] + mod[1]));
+        }
+      }
+    }
 }
 
 exports.Tile = class Tile {
-    constructor(board, x, y)  {
+    constructor(x, y, board, special_neighbors)  {
         this.board = board;
+        this.special_neighbors = special_neighbors || [];
         board.addTileAt(x, y, this);
     }
 
@@ -72,6 +89,19 @@ exports.Tile = class Tile {
 
     get y() {
         return this.coords[1];
+    }
+
+    get neighbors() {
+        let neighbors = this.board.findNeighbors(this);
+        return Array.concat(this.special_neighbors, neighbors);
+    }
+
+    isNeighbor( possibleNeighbor){
+      let neighbors = this.board.findNeighbors(this);
+      if(neighbors.indexOf(possibleNeighbor) != -1){
+        return true;
+      }
+      return false;
     }
 }
 
