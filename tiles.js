@@ -95,9 +95,8 @@ exports.Tile = class Tile {
     }
 
     isNeighbor( possibleNeighbor){
-      let neighbors = this.neighbors;
-      if(neighbors.indexOf(possibleNeighbor) != -1){
-        return true;
+      if (this.neighbors.indexOf(possibleNeighbor) != -1){
+          return true;
       }
       return false;
     }
