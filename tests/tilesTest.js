@@ -86,6 +86,10 @@ describe("tiles", function(){
     map.tileAtPosition(0,0).token = tok;
     tok.move(moveArr);
     assert(map.tileAtPosition(1,1) != tok);
+    assert(startTile.isNeighbor(downTile));
+    assert(startTile.isNeighbor(leftTile));
+    assert(startTile.isNeighbor(rightTile));
+    assert(!(startTile.isNeighbor(diagnal)));
   });
 
 });

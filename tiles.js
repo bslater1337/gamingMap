@@ -96,9 +96,9 @@ exports.Tile = class Tile {
 
     isNeighbor( possibleNeighbor){
       if (this.neighbors.indexOf(possibleNeighbor) != -1){
-          return true;
+          return false;
       }
-      return false;
+      return true;
     }
 }
 
