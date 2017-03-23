@@ -7,16 +7,52 @@ exports.board = class Board {
     }
 
     whereIsTile(tile) {
-        return this.mapByTiles(tile);
+        return this.mapByTiles.get(tile);
     }
 
     tileAtPosition(x, y)  {
-        return this.mapByCoords.get([x, y]);
+        try   {
+            return this.mapByCoords.get(x).get(y);
+        } catch(e)  {
+            return undefined;
+        }
     }
+
 
     addTileAt(x, y, tile) {
         this.mapByTiles.set(tile, [x, y]);
-        this.mapByCoords.set([x, y], tile);
+        let xmap = this.mapByCoords.get(x);
+        if (xmap === undefined) {
+            xmap = new Map();
+            this.mapByCoords.set(x, xmap);
+        }
+        xmap.set(y, tile);
+    }
+
+    removeTileAt(x, y){
+      let tile = this.mapByCoords.get(x).get(y);
+      this.mapByTiles.delete(tile);
+      this.mapByCoords.get(x).delete(y);
+      if (this.mapByCoords.get(x).size === 0) {
+          this.mapByCoords.delete(x);
+      }
+      return tile;
+    }
+
+    changeTileAt(x, y, tile){
+      this.removeTileAt(x, y);
+      this.addTileAt(x, y, tile);
+    }
+
+    changeTiles(arrayOfTilesChanges){
+      arrayOfTilesChanges.map(function(each){
+        if(tileAtPosition(each.x, each.y) = null){
+          addTileAt(each.x, each.y, each.tile);
+        }
+        else{
+          changeTileAt(each.x, each.y, each.tile);
+        }
+      });
     }
 }
 
