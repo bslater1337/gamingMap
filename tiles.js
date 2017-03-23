@@ -1,3 +1,5 @@
+//classes cannot be tested with mocha at this time due to googles v8 engine not having an implimentation
+
 exports.board = class Board {
     constructor() {
         this.mapByTiles = new Map();
@@ -44,11 +46,11 @@ exports.board = class Board {
 
     changeTiles(arrayOfTilesChanges){
       arrayOfTilesChanges.map(function(each){
-        if(this.tileAtPosition(each.x, each.y) === null){
-          this.addTileAt(each.x, each.y, each.tile);
+        if(tileAtPosition(each.x, each.y) = null){
+          addTileAt(each.x, each.y, each.tile);
         }
         else{
-          this.changeTileAt(each.x, each.y, each.tile);
+          changeTileAt(each.x, each.y, each.tile);
         }
       });
     }
@@ -63,8 +65,8 @@ exports.board = class Board {
       ];
       let neighbors = [];
       for (let mod of modifiers)  {
-        if(this.tileAtPosition(coords[0] + mod[0], coords[1] + mod[1]) !== undefined){
-          neighbors.push(this.tileAtPosition(coords[0] + mod[0], coords[1] + mod[1]));
+        if(tileAtPosition(coords[0] + mod[0], coords[1] + mod[1]) !== null){
+          neighbors.push(tileAtPosition(coords[0] + mod[0], coords[1] + mod[1]));
         }
       }
     }
@@ -73,8 +75,8 @@ exports.board = class Board {
 exports.Tile = class Tile {
     constructor(x, y, board, special_neighbors)  {
         this.board = board;
-        this.board.addTileAt(x, y, this);
         this.special_neighbors = special_neighbors || [];
+        board.addTileAt(x, y, this);
     }
 
     get coords()  {
@@ -94,8 +96,9 @@ exports.Tile = class Tile {
         return Array.concat(this.special_neighbors, neighbors);
     }
 
-    isNeighbor( possibleNeighbor){
+    isNeighbor(possibleNeighbor){
       let neighbors = this.board.findNeighbors(this);
+      console.log(neighbors);
       if(neighbors.indexOf(possibleNeighbor) != -1){
         return true;
       }
