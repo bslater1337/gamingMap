@@ -1,5 +1,3 @@
-//classes cannot be tested with mocha at this time due to googles v8 engine not having an implimentation
-
 exports.board = class Board {
     constructor() {
         this.mapByTiles = new Map();
@@ -65,8 +63,8 @@ exports.board = class Board {
       ];
       let neighbors = [];
       for (let mod of modifiers)  {
-        if(tileAtPosition(coords[0] + mod[0], coords[1] + mod[1]) !== undefined){
-          neighbors.push(tileAtPosition(coords[0] + mod[0], coords[1] + mod[1]));
+        if(this.tileAtPosition(coords[0] + mod[0], coords[1] + mod[1]) !== undefined){
+          neighbors.push(this.tileAtPosition(coords[0] + mod[0], coords[1] + mod[1]));
         }
       }
     }
