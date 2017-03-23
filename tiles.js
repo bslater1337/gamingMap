@@ -44,11 +44,11 @@ exports.board = class Board {
 
     changeTiles(arrayOfTilesChanges){
       arrayOfTilesChanges.map(function(each){
-        if(tileAtPosition(each.x, each.y) = null){
-          addTileAt(each.x, each.y, each.tile);
+        if(this.tileAtPosition(each.x, each.y) === null){
+          this.addTileAt(each.x, each.y, each.tile);
         }
         else{
-          changeTileAt(each.x, each.y, each.tile);
+          this.changeTileAt(each.x, each.y, each.tile);
         }
       });
     }
@@ -73,8 +73,8 @@ exports.board = class Board {
 exports.Tile = class Tile {
     constructor(x, y, board, special_neighbors)  {
         this.board = board;
+        this.board.addTileAt(x, y, this);
         this.special_neighbors = special_neighbors || [];
-        board.addTileAt(x, y, this);
     }
 
     get coords()  {
