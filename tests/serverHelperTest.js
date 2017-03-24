@@ -1,6 +1,6 @@
 const mocha = require('mocha');
 const assert = require('assert');
-const serverHelper = require("../serverHelper");
+//const serverHelper = require("../serverHelper");
 const tile = require("../tiles.js");
 
 function setupMap(token){
@@ -84,7 +84,7 @@ describe("serverHelper", function(){
         assert(map.tileAtPosition(each.x, each.y)== tile.basicGround);
     }
 
-    serverHelper.changeTiles(secondTiles);
+    map.changeTiles(secondTiles);
     for (let each of map.mapByTiles.keys()) {
       if (each !== null)
         assert(map.tileAtPosition(each.x, each.y)== tile.basicWall);

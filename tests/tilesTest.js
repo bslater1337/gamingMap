@@ -1,6 +1,6 @@
 const mocha = require('mocha');
 const assert = require('assert');
-const serverHelper = require("../serverHelper");
+//const serverHelper = require("../serverHelper");
 const tile = require("../tiles.js");
 
 function setupMap(token){
