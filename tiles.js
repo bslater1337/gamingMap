@@ -2,6 +2,7 @@ exports.board = class Board {
     constructor() {
         this.mapByTiles = new Map();
         this.mapByCoords = new Map();
+        this._nullTile = new exports.NullTile();
     }
 
     whereIsTile(tile) {
@@ -10,9 +11,9 @@ exports.board = class Board {
 
     tileAtPosition(x, y)  {
         try   {
-            return this.mapByCoords.get(x).get(y);
+            return this.mapByCoords.get(x).get(y) || this._nullTile;
         } catch(e)  {
-            return undefined;
+            return this._nullTile;
         }
     }
 
@@ -70,11 +71,26 @@ exports.board = class Board {
     }
 }
 
-exports.Tile = class Tile {
-    constructor(x, y, board, special_neighbors)  {
+exports.NullTile = class NullTile {
+    constructor()  {}
+
+    isNeighbor()  {
+      return false;
+    }
+}
+
+exports.Tile = class Tile extends exports.NullTile {
+    constructor(x, y, board, special_neighbors) {
+        super();
         this.board = board;
         this.board.addTileAt(x, y, this);
         this.special_neighbors = special_neighbors || [];
+        this.difficultTurrain = false;
+        this.color = null;
+        this.transparent = true;
+        this.canMoveThrough = true;
+        this.size = 1;
+        this.token = null;
     }
 
     get coords()  {
@@ -95,31 +111,30 @@ exports.Tile = class Tile {
     }
 
     isNeighbor( possibleNeighbor){
-      if (this.neighbors.indexOf(possibleNeighbor) != -1){
+      if (this.neighbors.indexOf(possibleNeighbor) !== -1){
           return false;
       }
       return true;
     }
 }
 
-var basicGround = {
-   difficultTurrain : false,
-   color : "green",
-   transparent : true,
-   canMoveThrough : true,
-   size : 1,
-   token : null
+exports.basicGround = class basicGround extends exports.Tile {
+
 }
- var basicWall = {
+exports.basicWall = class basicWall extends exports.Tile {
+  constructor(x, y, board, special_neighbors)  {
+      super(x, y, board, special_neighbors);
+      this.canMoveThrough = false;
+  }
+  /*
    difficultTurrain : false,
    color : "gray",
    transparent : false,
    canMoveThrough : false,
    size : 1,
    token : null
+   */
 }
-exports.basicGround =  basicGround;
-exports.basicWall =  basicWall;
 
 var basicToken = {
    name : "unnamed token",
@@ -131,6 +146,12 @@ var basicToken = {
         isLegal = false;
       }
     });
+    for(let i = 0; i < arrayOfTiles.length-2; i++){
+      if(arrayOfTiles[i].isNeighbor(arrayOfTiles[i+1])){
+        isLegal = false;
+        break;
+      }
+    }
     return isLegal;
   },
   move : function(arrayOfTiles){

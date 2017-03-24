@@ -41,26 +41,27 @@ describe("Board Functions", function(){
 
   it("should add a tile to a map", function(){
     var map = setupMap(null);
-    map.addTileAt(1,1,tile.basicGround);
+    new tile.basicGround(1,1, map);
     //map.addTileAt(1,1,"testTile");
-    assert(map.tileAtPosition(1, 1) == tile.basicGround);
+    assert(map.tileAtPosition(1, 1) instanceof tile.basicGround);
   });
 
   it("should fail to remove a tile from a map", function(){
     var map = setupMap(null);
 
     map.removeTileAt(1,1);
-    assert(map.tileAtPosition(1, 1) == null);
+    assert(map.tileAtPosition(1, 1) instanceof tile.NullTile);
   });
 
   it("should remove a tile from a map", function(){
     var map = setupMap(null);
 
-    map.addTileAt(1,1,tile.basicGround);
-    assert(map.tileAtPosition(1, 1) == tile.basicGround);
+    //map.addTileAt(1,1,tile.basicGround);
+    new tile.basicGround(1,1,map);
+    assert(map.tileAtPosition(1, 1) instanceof tile.basicGround);
 
     map.removeTileAt(1,1);
-    assert(map.tileAtPosition(1, 1) == null);
+    assert(map.tileAtPosition(1, 1) instanceof tile.NullTile);
   });
 
   it("should change a tile on the map", function(){

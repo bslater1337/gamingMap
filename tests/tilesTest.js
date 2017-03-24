@@ -10,7 +10,7 @@ function setupMap(token){
       map[i] = [];
     }
     for(var j = 0; j < 100; j++){
-      map.addTileAt(i, j, token);
+      new token(i, j, map);
     }
   }
   return map;
@@ -30,31 +30,26 @@ function createChangesArray(length, token){
 
 describe("tiles", function(){
   it("should be a board filled with null tiles", function(){
-    var map = setupMap(null);
+    var map = setupMap(tile.NullTile);
 
     for(var i = 0; i < 100; i++){
       for(var j = 0; j < 100; j++){
-        assert(map.tileAtPosition(i,j) == null);
+        assert(map.tileAtPosition(i,j) instanceof tile.NullTile);
       }
     }
   });
 
   it("should have the correct properties when added", function(){
-    var map = setupMap(null);
-    map.addTileAt(1,1, tile.basicGround);
-    map.addTileAt(2,1, tile.basicWall);
-    //console.log(map.tileAtPosition(1,1));
-    //console.log(map.mapByCoords);
+    var map = setupMap(tile.NullTile);
+    new tile.basicGround(1, 1, map);
+    new tile.basicWall(2,1, map);
     //assert for basic ground
-
-    assert(map.tileAtPosition(1,1).difficultTurrain == false);
-    assert(map.tileAtPosition(1,1).transparent == true);
+    assert(map.tileAtPosition(1,1).difficultTurrain === false);
     assert(map.tileAtPosition(1,1).canMoveThrough == true);
     assert(map.tileAtPosition(1,1).size == 1);
     assert(map.tileAtPosition(1,1).token == null);
     //assert for basic wall
     assert(map.tileAtPosition(2,1).difficultTurrain == false);
-    assert(map.tileAtPosition(2,1).transparent == false);
     assert(map.tileAtPosition(2,1).canMoveThrough == false);
     assert(map.tileAtPosition(2,1).size == 1);
     assert(map.tileAtPosition(2,1).token == null);
@@ -62,11 +57,27 @@ describe("tiles", function(){
   });
 
   it("should be able to hold a token", function(){
-    var map = setupMap(null);
+    var map = setupMap(tile.NullTile);
     map.addTileAt(1,1, tile.basicGround);
     var tok = tile.token
     map.tileAtPosition(1,1).token = tok;
     assert(map.tileAtPosition(1,1).token == tok);
+  });
+
+  it("should find the neighbors of a tile",function(){
+/*
+  00|10|20
+  01|11|21
+  02|12|22
+*/
+    var map = setupMap(tile.NullTile);
+    startTile = new tile.Tile(1, 1, map);
+    upTile = new tile.Tile(1, 0, map);
+    downTile = new tile.Tile(1, 2, map);
+    leftTile = new tile.Tile(0, 1, map);
+    rightTile = new tile.Tile(2, 1, map);
+    diagnal = new tile.Tile(2,0, map);
+    assert(startTile.isNeighbor(upTile));
   });
 
   it("should be able to move a token to a position with correct tiles", function(){
@@ -86,22 +97,6 @@ describe("tiles", function(){
     map.tileAtPosition(0,0).token = tok;
     tok.move(moveArr);
     assert(map.tileAtPosition(1,1) != tok);
-  });
-
-  it("should find the neighbors of a tile",function(){
-/*
-  00|10|20
-  01|11|21
-  02|12|22
-*/
-    var map = setupMap(null);
-    startTile = new tile.Tile(1, 1, map);
-    upTile = new tile.Tile(1, 0, map);
-    downTile = new tile.Tile(1, 2, map);
-    leftTile = new tile.Tile(0, 1, map);
-    rightTile = new tile.Tile(2, 1, map);
-    diagnal = new tile.Tile(2,0, map);
-    assert(startTile.isNeighbor(upTile));
   });
 
 });
