@@ -88,4 +88,20 @@ describe("tiles", function(){
     assert(map.tileAtPosition(1,1) != tok);
   });
 
+  it("should find the neighbors of a tile",function(){
+/*
+  00|10|20
+  01|11|21
+  02|12|22
+*/
+    var map = setupMap(null);
+    startTile = new tile.Tile(1, 1, map);
+    upTile = new tile.Tile(1, 0, map);
+    downTile = new tile.Tile(1, 2, map);
+    leftTile = new tile.Tile(0, 1, map);
+    rightTile = new tile.Tile(2, 1, map);
+    diagnal = new tile.Tile(2,0, map);
+    assert(startTile.isNeighbor(upTile));
+  });
+
 });
