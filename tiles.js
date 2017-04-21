@@ -163,29 +163,45 @@ exports.basicWall = class basicWall extends exports.Tile {
    */
 }
 
-var basicToken = {
-   name : "unnamed token",
-   movementSpeed : 5,
-   canMove : function(arrayOfTiles){
-    var isLegal = true;
-    arrayOfTiles.map(function(each){
-      if(!each.canMoveThrough){
-        isLegal = false;
-      }
-    });
-    for(let i = 0; i < arrayOfTiles.length-2; i++){
-      if(arrayOfTiles[i].isNeighbor(arrayOfTiles[i+1])){
-        isLegal = false;
-        break;
-      }
+exports.Token = class Token {
+    constructor(name, type) {
+        this.name = name;
+        this.type = type;
+        this.UUID = this.hash = uuid();
     }
-    return isLegal;
-  },
-  move : function(arrayOfTiles){
-    if(this.canMove(arrayOfTiles)){
-      arrayOfTiles[0].token = null;
-      arrayOfTiles[arrayOfTiles.length -1].token = this;
+
+    equals(aToken)  {
+        return this.hash === aToken.hash;
     }
-  }
+
+    canMove()   {
+        return false;
+    }
 }
-exports.token =  basicToken;
+
+exports.MovableToken = class MovableToken extends exports.Token {
+    constructor(name, type, movementSpeed)  {
+        super(name, type);
+        this.movementSpeed = movementSpeed;
+    }
+
+    canMove(arrayOfTiles){
+        var isLegal = true;
+        for(let i = 0; i < arrayOfTiles.length; i++){
+            if (!arrayOfTiles[i].canMoveThrough ||
+            (i < arrayOfTiles.length-2 && arrayOfTiles[i].isNeighbor(arrayOfTiles[i+1])))   {
+                isLegal = false;
+                break;
+            }
+        }
+        return isLegal;
+   }
+
+    move(arrayOfTiles){
+        if(this.canMove(arrayOfTiles)){
+            arrayOfTiles[0].token = null;
+            arrayOfTiles[arrayOfTiles.length -1].token = this;
+        }
+    }
+}
+exports.token = new exports.MovableToken("unnamed token", "dumb token", 5);
