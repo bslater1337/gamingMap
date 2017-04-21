@@ -1,3 +1,5 @@
+const uuid = require('uuid/v4');
+
 exports.board = class Board {
     constructor() {
         this.mapByTiles = new Map();
@@ -68,11 +70,22 @@ exports.board = class Board {
           neighbors.push(this.tileAtPosition(coords[0] + mod[0], coords[1] + mod[1]));
         }
       }
+      return neighbors;
     }
 }
 
+const NullUUID = uuid();
+
 exports.NullTile = class NullTile {
     constructor()  {}
+
+    get hash()  {
+        return this.UUID || NullUUID;
+    }
+
+    equals(aTile)   {
+        return this.hash === aTile.hash;
+    }
 
     isNeighbor()  {
       return false;
@@ -91,6 +104,7 @@ exports.Tile = class Tile extends exports.NullTile {
         this.canMoveThrough = true;
         this.size = 1;
         this.token = null;
+        this.UUID = uuid();
     }
 
     get coords()  {
@@ -111,10 +125,14 @@ exports.Tile = class Tile extends exports.NullTile {
     }
 
     isNeighbor( possibleNeighbor){
-      if (this.neighbors.indexOf(possibleNeighbor) !== -1){
-          return false;
-      }
-      return true;
+        for (let neighbor of this.neighbors)   {
+            if (neighbor instanceof exports.NullTile && possibleNeighbor instanceof exports.NullTile)   {
+                if (possibleNeighbor.equals(neighbor))  {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 
