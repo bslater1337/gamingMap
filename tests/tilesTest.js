@@ -108,4 +108,16 @@ describe("tiles", function(){
     assert(map.tileAtPosition(1,1) != tok);
   });
 
+  it("should be able to determine all possible destination tiles (simple case)", function(){
+      let map = new tile.board()
+      for (let i = 0; i < 7; i++) {
+          for (let j = 0; j < 7; j++) {
+              new tile.Tile(i, j, map);
+          }
+      }
+      let token = new tile.MovableToken("Gabe", "test", map.tileAtPosition(3, 3), 3)
+      let a = token.possibleDestinations
+      assert.equal(25, a.length);
+  })
+
 });

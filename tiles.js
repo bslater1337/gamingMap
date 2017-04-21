@@ -4,12 +4,17 @@ exports.board = class Board {
     constructor() {
         this.mapByTiles = new Map();
         this.mapByCoords = new Map();
+        this.mapByHashes = new Map();
         this._nullTile = new exports.NullTile();
         this.UUID = this.hash = uuid();
     }
 
     equals(aBoard)  {
         return this.hash === aBoard.hash;
+    }
+
+    getTileByHash(hash) {
+        return this.mapByHashes.get(hash);
     }
 
     whereIsTile(tile) {
@@ -26,6 +31,9 @@ exports.board = class Board {
 
     addTileAt(x, y, tile) {
         this.mapByTiles.set(tile, [x, y]);
+        if (tile !== null && tile !== undefined)    {
+            this.mapByHashes.set(tile.hash, tile);
+        }
         let xmap = this.mapByCoords.get(x);
         if (xmap === undefined) {
             xmap = new Map();
@@ -38,6 +46,9 @@ exports.board = class Board {
       let tile = this.mapByCoords.get(x).get(y);
       this.mapByTiles.delete(tile);
       this.mapByCoords.get(x).delete(y);
+      if (tile !== null && tile !== undefined)  {
+          this.mapByHashes.delete(tile.hash);
+      }
       if (this.mapByCoords.get(x).size === 0) {
           this.mapByCoords.delete(x);
       }
@@ -81,7 +92,13 @@ exports.board = class Board {
 const NullUUID = uuid();
 
 exports.NullTile = class NullTile {
-    constructor()  {}
+    constructor(board)  {
+        this.board = board;
+    }
+
+    get neighbors() {
+        return [];
+    }
 
     get hash()  {
         return this.UUID || NullUUID;
@@ -98,8 +115,8 @@ exports.NullTile = class NullTile {
 
 exports.Tile = class Tile extends exports.NullTile {
     constructor(x, y, board, special_neighbors) {
-        super();
-        this.board = board;
+        super(board);
+        this.UUID = uuid();
         this.board.addTileAt(x, y, this);
         this.difficultTurrain = false;
         this.color = null;
@@ -107,7 +124,6 @@ exports.Tile = class Tile extends exports.NullTile {
         this.canMoveThrough = true;
         this.size = 1;
         this.token = null;
-        this.UUID = uuid();
         this.special_neighbors = special_neighbors || [];
         for (let neighbor of this.special_neighbors) {
             if (neighbor.special_neighbors !== undefined)   {
@@ -164,9 +180,11 @@ exports.basicWall = class basicWall extends exports.Tile {
 }
 
 exports.Token = class Token {
-    constructor(name, type) {
+    constructor(name, type, tile) {
         this.name = name;
         this.type = type;
+        this.tile = tile;
+        // this.tile.addToken(this);
         this.UUID = this.hash = uuid();
     }
 
@@ -180,8 +198,8 @@ exports.Token = class Token {
 }
 
 exports.MovableToken = class MovableToken extends exports.Token {
-    constructor(name, type, movementSpeed)  {
-        super(name, type);
+    constructor(name, type, tile, movementSpeed)  {
+        super(name, type, tile);
         this.movementSpeed = movementSpeed;
     }
 
@@ -200,8 +218,56 @@ exports.MovableToken = class MovableToken extends exports.Token {
     move(arrayOfTiles){
         if(this.canMove(arrayOfTiles)){
             arrayOfTiles[0].token = null;
-            arrayOfTiles[arrayOfTiles.length -1].token = this;
+            this.tile = arrayOfTiles[arrayOfTiles.length -1];
+            this.tile.token = this;
         }
     }
+
+    get possibleDestinations()  {
+        let visit = (tile, range)=>{
+            let ret = [tile];
+            if (range)  {
+                for (let neighbor of tile.neighbors)    {
+                    if (neighbor.canMoveThrough)    {
+                        ret = ret.concat(visit(neighbor, range - 1));
+                    }
+                }
+            }
+            return ret;
+        };
+
+        let arr = visit(this.tile, this.movementSpeed);
+        let ret = [];
+        let seen = new Set();
+        for (let tile of arr)   {
+            if (!seen.has(tile.hash))   {
+                ret.push(tile);
+                seen.add(tile.hash);
+            }
+        }
+        return ret;
+        // let visited = new Set([this.tile.hash]);
+        // let this_time = this.tile.neighbors;
+        // let next_time = [];
+        // let range = this.movementSpeed;
+        //
+        // while (this_time.size && range) {
+        //     for (let tile of this_time) {
+        //         for (let neighbor of tile.neighbors)    {
+        //             if (!visited.has(neighbor.hash))    {
+        //                 next_time.push(tile);
+        //             }
+        //         }
+        //         visited.add(tile.hash);
+        //     }
+        //     range--;
+        //     this_time = next_time;
+        //     next_time = [];
+        // }
+        // for (let tile of this_time) {
+        //     visited.add(tile.hash);
+        // }
+        // return visited;
+    }
 }
-exports.token = new exports.MovableToken("unnamed token", "dumb token", 5);
+exports.token = new exports.MovableToken("unnamed token", "dumb token", undefined, 5);
