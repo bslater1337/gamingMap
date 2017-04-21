@@ -70,14 +70,23 @@ describe("tiles", function(){
   01|11|21
   02|12|22
 */
-    var map = setupMap(tile.NullTile);
-    startTile = new tile.Tile(1, 1, map);
-    upTile = new tile.Tile(1, 0, map);
-    downTile = new tile.Tile(1, 2, map);
-    leftTile = new tile.Tile(0, 1, map);
-    rightTile = new tile.Tile(2, 1, map);
-    diagnal = new tile.Tile(2,0, map);
+    let map = setupMap(tile.NullTile);
+    let portal = new tile.Tile(17, 17, map);
+    let startTile = new tile.Tile(1, 1, map, [portal]);
+    let upTile = new tile.Tile(1, 0, map);
+    let downTile = new tile.Tile(1, 2, map);
+    let leftTile = new tile.Tile(0, 1, map);
+    let rightTile = new tile.Tile(2, 1, map);
+    let diagonal = new tile.Tile(2,0, map);
     assert(startTile.isNeighbor(upTile));
+    assert(startTile.isNeighbor(downTile));
+    assert(startTile.isNeighbor(leftTile));
+    assert(startTile.isNeighbor(rightTile));
+    assert(!startTile.isNeighbor(startTile));
+    assert(!startTile.isNeighbor(diagonal));
+    assert(!upTile.isNeighbor(downTile));
+    assert(portal.isNeighbor(startTile));  // if neighborness is not associative, reverse the order of these tiles
+    assert(!portal.isNeighbor(upTile));
   });
 
   it("should be able to move a token to a position with correct tiles", function(){

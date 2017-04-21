@@ -97,7 +97,6 @@ exports.Tile = class Tile extends exports.NullTile {
         super();
         this.board = board;
         this.board.addTileAt(x, y, this);
-        this.special_neighbors = special_neighbors || [];
         this.difficultTurrain = false;
         this.color = null;
         this.transparent = true;
@@ -105,6 +104,12 @@ exports.Tile = class Tile extends exports.NullTile {
         this.size = 1;
         this.token = null;
         this.UUID = uuid();
+        this.special_neighbors = special_neighbors || [];
+        for (let neighbor of this.special_neighbors) {
+            if (neighbor.special_neighbors !== undefined)   {
+                neighbor.special_neighbors.push(this);
+            }
+        }
     }
 
     get coords()  {
