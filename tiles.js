@@ -5,6 +5,11 @@ exports.board = class Board {
         this.mapByTiles = new Map();
         this.mapByCoords = new Map();
         this._nullTile = new exports.NullTile();
+        this.UUID = this.hash = uuid();
+    }
+
+    equals(aBoard)  {
+        return this.hash === aBoard.hash;
     }
 
     whereIsTile(tile) {
@@ -18,7 +23,6 @@ exports.board = class Board {
             return this._nullTile;
         }
     }
-
 
     addTileAt(x, y, tile) {
         this.mapByTiles.set(tile, [x, y]);
