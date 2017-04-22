@@ -5,7 +5,7 @@ exports.board = class Board {
         this.mapByTiles = new Map();
         this.mapByCoords = new Map();
         this.mapByHashes = new Map();
-        this._nullTile = new exports.NullTile();
+        this._nullTile = new exports.NullTile(this);
         this.UUID = this.hash = uuid();
     }
 
