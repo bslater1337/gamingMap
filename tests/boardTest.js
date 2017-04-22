@@ -70,10 +70,10 @@ describe("Board Functions", function(){
   it("should change a tile on the map", function(){
     var map = setupMap(tile.NullTile);
     map.addTileAt(1,1,tile.basicGround);
-    assert(map.tileAtPosition(1, 1) == tile.basicGround);
+    assert(map.tileAtPosition(1, 1) === tile.basicGround);
 
     map.changeTileAt(1,1,tile.basicWall);
-    assert(map.tileAtPosition(1, 1) == tile.basicWall);
+    assert(map.tileAtPosition(1, 1) === tile.basicWall);
   });
 
 
@@ -84,14 +84,14 @@ describe("Board Functions", function(){
 
     map.changeTiles(startTiles);
     for (let each of map.mapByTiles.keys()) {
-      if (each !== null)
-        assert(map.tileAtPosition(each.x, each.y)== tile.basicGround);
+      if (each !== map._nullTile)
+        assert(map.tileAtPosition(each.x, each.y)=== tile.basicGround);
     }
 
     map.changeTiles(secondTiles);
     for (let each of map.mapByTiles.keys()) {
-      if (each !== null)
-        assert(map.tileAtPosition(each.x, each.y)== tile.basicWall);
+      if (each !== map._nullTile)
+        assert(map.tileAtPosition(each.x, each.y)=== tile.basicWall);
     }
   });
 

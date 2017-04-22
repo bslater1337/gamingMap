@@ -49,14 +49,14 @@ describe("tiles", function(){
     new tile.basicWall(2,1, map);
     //assert for basic ground
     assert(map.tileAtPosition(1,1).difficultTurrain === false);
-    assert(map.tileAtPosition(1,1).canMoveThrough == true);
-    assert(map.tileAtPosition(1,1).size == 1);
-    assert(map.tileAtPosition(1,1).token == null);
+    assert(map.tileAtPosition(1,1).canMoveThrough === true);
+    assert(map.tileAtPosition(1,1).size === 1);
+    assert(map.tileAtPosition(1,1).token === null);
     //assert for basic wall
-    assert(map.tileAtPosition(2,1).difficultTurrain == false);
-    assert(map.tileAtPosition(2,1).canMoveThrough == false);
-    assert(map.tileAtPosition(2,1).size == 1);
-    assert(map.tileAtPosition(2,1).token == null);
+    assert(map.tileAtPosition(2,1).difficultTurrain === false);
+    assert(map.tileAtPosition(2,1).canMoveThrough === false);
+    assert(map.tileAtPosition(2,1).size === 1);
+    assert(map.tileAtPosition(2,1).token === null);
 
   });
 
@@ -65,7 +65,7 @@ describe("tiles", function(){
     map.addTileAt(1,1, tile.basicGround);
     var tok = tile.token
     map.tileAtPosition(1,1).token = tok;
-    assert(map.tileAtPosition(1,1).token == tok);
+    assert(map.tileAtPosition(1,1).token === tok);
   });
 
   it("should find the neighbors of a tile",function(){
