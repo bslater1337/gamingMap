@@ -30,7 +30,7 @@ exports.board = class Board {
     }
 
     constructTileAt(x, y, tileType, ...args)  {
-      new tileType(x, y, this, ...args);
+      _ = new tileType(x, y, this, ...args);
     }
 
     addTileAt(x, y, tile) {

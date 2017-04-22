@@ -99,7 +99,7 @@ describe("tiles", function(){
     var tok =  tile.token;
     map.tileAtPosition(0,0).token = tok;
     tok.move(moveArr);
-    assert(map.tileAtPosition(1,1).token == tok);
+    assert(map.tileAtPosition(1,1).token === tok);
   });
 
   it("should not be able to move token to a new position with incorrect tiles", function(){
@@ -109,7 +109,7 @@ describe("tiles", function(){
     map.changeTileAt(0,0,tile.basicGround);
     map.tileAtPosition(0,0).token = tok;
     tok.move(moveArr);
-    assert(map.tileAtPosition(1,1) != tok);
+    assert(map.tileAtPosition(1,1) !== tok);
   });
 
   it("should be able to determine all possible destination tiles (simple case)", function(){
