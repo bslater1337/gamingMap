@@ -10,7 +10,7 @@ function setupMap(token){
       map[i] = [];
     }
     for(var j = 0; j < 100; j++){
-      map.addTileAt(i, j, token);
+      new token(i, j, map);
     }
   }
   return map;
@@ -30,31 +30,34 @@ function createChangesArray(length, token){
 
 describe("Board Functions", function(){
   it("it should be a null map", function(){
-    var map = setupMap(null);
+    var map = setupMap(tile.NullTile);
 
     for(var i = 0; i < 100; i++){
       for(var j = 0; j < 100; j++){
-        assert(map.addTileAt(i, j) == null);
+        assert(map.tileAtPosition(i,j) instanceof tile.NullTile);
       }
     }
   });
 
   it("should add a tile to a map", function(){
-    var map = setupMap(null);
+    var map = setupMap(tile.NullTile);
     new tile.basicGround(1,1, map);
     //map.addTileAt(1,1,"testTile");
     assert(map.tileAtPosition(1, 1) instanceof tile.basicGround);
   });
 
   it("should fail to remove a tile from a map", function(){
-    var map = setupMap(null);
+    var map = setupMap(tile.NullTile);
+    var smallMap = new tile.board;
+    new tile.basicGround(1,0, smallMap);
 
     map.removeTileAt(1,1);
     assert(map.tileAtPosition(1, 1) instanceof tile.NullTile);
+    smallMap.removeTileAt(0,1);
   });
 
   it("should remove a tile from a map", function(){
-    var map = setupMap(null);
+    var map = setupMap(tile.NullTile);
 
     //map.addTileAt(1,1,tile.basicGround);
     new tile.basicGround(1,1,map);
@@ -65,7 +68,7 @@ describe("Board Functions", function(){
   });
 
   it("should change a tile on the map", function(){
-    var map = setupMap(null);
+    var map = setupMap(tile.NullTile);
     map.addTileAt(1,1,tile.basicGround);
     assert(map.tileAtPosition(1, 1) == tile.basicGround);
 
@@ -75,7 +78,7 @@ describe("Board Functions", function(){
 
 
   it("should change multiple tiles on a map", function(){
-    var map = setupMap(null);
+    var map = setupMap(tile.NullTile);
     var startTiles = createChangesArray(100, tile.basicGround);
     var secondTiles = createChangesArray(100, tile.basicWall);
 

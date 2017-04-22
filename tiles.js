@@ -43,6 +43,9 @@ exports.board = class Board {
     }
 
     removeTileAt(x, y){
+      if(this.mapByCoords.get(x) === undefined){
+        return this._nullTile;
+      }
       let tile = this.mapByCoords.get(x).get(y);
       this.mapByTiles.delete(tile);
       this.mapByCoords.get(x).delete(y);
