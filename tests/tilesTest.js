@@ -10,7 +10,7 @@ function setupMap(token){
       map[i] = [];
     }
     for(var j = 0; j < 100; j++){
-      new token(i, j, map);
+      _ = new token(i, j, map);
     }
   }
   return map;
@@ -45,8 +45,8 @@ describe("tiles", function(){
 
   it("should have the correct properties when added", function(){
     var map = setupMap(tile.NullTile);
-    new tile.basicGround(1, 1, map);
-    new tile.basicWall(2,1, map);
+    _ = new tile.basicGround(1, 1, map);
+    _ = new tile.basicWall(2,1, map);
     //assert for basic ground
     assert(map.tileAtPosition(1,1).difficultTurrain === false);
     assert(map.tileAtPosition(1,1).canMoveThrough === true);
@@ -116,7 +116,7 @@ describe("tiles", function(){
       let map = new tile.board();
       for (let i = 0; i < 7; i++) {
           for (let j = 0; j < 7; j++) {
-              new tile.Tile(i, j, map);
+              _ = new tile.Tile(i, j, map);
           }
       }
       let token = new tile.MovableToken("Gabe", "test", map.tileAtPosition(3, 3), 3);

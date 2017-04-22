@@ -29,6 +29,10 @@ exports.board = class Board {
         }
     }
 
+    constructTileAt(x, y, tileType, ...args)  {
+      new tileType(x, y, this, ...args);
+    }
+
     addTileAt(x, y, tile) {
         this.mapByTiles.set(tile, [x, y]);
         if (tile !== null && tile !== undefined)    {

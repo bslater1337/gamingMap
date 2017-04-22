@@ -10,7 +10,7 @@ function setupMap(token){
       map[i] = [];
     }
     for(var j = 0; j < 100; j++){
-      new token(i, j, map);
+      _ = new token(i, j, map);
     }
   }
   return map;
@@ -41,7 +41,7 @@ describe("Board Functions", function(){
 
   it("should add a tile to a map", function(){
     var map = setupMap(tile.NullTile);
-    new tile.basicGround(1,1, map);
+    map.constructTileAt(1, 1, tile.basicGround);
     //map.addTileAt(1,1,"testTile");
     assert(map.tileAtPosition(1, 1) instanceof tile.basicGround);
   });
@@ -49,7 +49,7 @@ describe("Board Functions", function(){
   it("should fail to remove a tile from a map", function(){
     var map = setupMap(tile.NullTile);
     var smallMap = new tile.board;
-    new tile.basicGround(1,0, smallMap);
+    _ = new tile.basicGround(1,0, smallMap);
 
     map.removeTileAt(1,1);
     assert(map.tileAtPosition(1, 1) instanceof tile.NullTile);
@@ -60,7 +60,7 @@ describe("Board Functions", function(){
     var map = setupMap(tile.NullTile);
 
     //map.addTileAt(1,1,tile.basicGround);
-    new tile.basicGround(1,1,map);
+    _ = new tile.basicGround(1,1,map);
     assert(map.tileAtPosition(1, 1) instanceof tile.basicGround);
 
     map.removeTileAt(1,1);
