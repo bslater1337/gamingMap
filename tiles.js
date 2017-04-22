@@ -5,7 +5,7 @@ exports.board = class Board {
         this.mapByTiles = new Map();
         this.mapByCoords = new Map();
         this.mapByHashes = new Map();
-        this._nullTile = new exports.NullTile();
+        this._nullTile = new exports.NullTile(this);
         this.UUID = this.hash = uuid();
     }
 
@@ -207,15 +207,15 @@ exports.MovableToken = class MovableToken extends exports.Token {
     }
 
     canMove(arrayOfTiles){
-        var isLegal = true;
-        for(let i = 0; i < arrayOfTiles.length; i++){
-            if (!arrayOfTiles[i].canMoveThrough ||
-            (i < arrayOfTiles.length-2 && arrayOfTiles[i].isNeighbor(arrayOfTiles[i+1])))   {
-                isLegal = false;
-                break;
+        let prev;
+        for (let tile of arrayOfTiles)  {
+            if (!tile.canMoveThrough ||
+            (prev !== undefined && prev.isNeighbor(tile)))  {
+                return false;
             }
+            prev = tile;
         }
-        return isLegal;
+        return true;
    }
 
     move(arrayOfTiles){
