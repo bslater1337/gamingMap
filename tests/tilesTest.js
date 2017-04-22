@@ -1,32 +1,11 @@
 const mocha = require('mocha');
 const assert = require('assert');
+const testHelper = require('./testHelper.js');
 //const serverHelper = require("../serverHelper");
 const tile = require("../tiles.js");
 
-function setupMap(token){
-  var map = new tile.board;
-  for(var i = 0; i < 100; i++){
-    if (map[i] === undefined) {
-      map[i] = [];
-    }
-    for(var j = 0; j < 100; j++){
-      _ = new token(i, j, map);
-    }
-  }
-  return map;
-}
-
-function createChangesArray(length, token){
-  var arr = []
-  for(var i = 0; i < length; i++){
-    var temp = {
-      x : Math.floor(Math.random()*100),
-      y : Math.floor(Math.random()*100),
-      tile : token
-    }
-  }
-  return arr;
-}
+let setupMap = testHelper.setupMap;
+let createChangesArray = testHelper.createChangesArray;
 
 function distance(x1, y1, x2, y2)   {
     return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
