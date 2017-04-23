@@ -7,8 +7,6 @@ const tile = require("../tiles.js");
 let setupMap = testHelper.setupMap;
 let createChangesArray = testHelper.createChangesArray;
 
-
-
 describe("tiles", function(){
 
   it("should have the correct properties when added", function(){
@@ -60,26 +58,5 @@ describe("tiles", function(){
     assert(portal.isNeighbor(startTile));  // if neighborness is not associative, reverse the order of these tiles
     assert(!portal.isNeighbor(upTile));
   });
-
-  it("should be able to move a token to a position with correct tiles", function(){
-    let map = setupMap(tile.basicGround);
-    let moveArr = [map.tileAtPosition(0,0), map.tileAtPosition(1,1)];
-    let tok =  tile.token;
-    map.tileAtPosition(0,0).token = tok;
-    tok.move(moveArr);
-    assert(map.tileAtPosition(1,1).token === tok);
-  });
-
-  it("should not be able to move token to a new position with incorrect tiles", function(){
-    let map = setupMap(tile.basicWall);
-    let moveArr = [map.tileAtPosition(0,0), map.tileAtPosition(1,1)];
-    let tok = tile.token;
-    map.changeTileAt(0,0,tile.basicGround);
-    map.tileAtPosition(0,0).token = tok;
-    tok.move(moveArr);
-    assert(map.tileAtPosition(1,1) !== tok);
-  });
-
-
 
 });
