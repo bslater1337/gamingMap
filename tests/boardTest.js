@@ -7,6 +7,13 @@ const tile = require("../tiles.js");
 let setupMap = testHelper.setupMap;
 let createChangesArray = testHelper.createChangesArray;
 
+function assertManyTiles(map, tile){
+  for (let each of map.mapByTiles.keys()) {
+    if (each !== map._nullTile)
+      assert(map.tileAtPosition(each.x, each.y)=== tile);
+  }
+}
+
 describe("Board Functions", function(){
   it("it should be a null map", function(){
     let map = setupMap(tile.NullTile);
@@ -62,16 +69,10 @@ describe("Board Functions", function(){
     let secondTiles = createChangesArray(100, tile.basicWall);
 
     map.changeTiles(startTiles);
-    for (let each of map.mapByTiles.keys()) {
-      if (each !== map._nullTile)
-        assert(map.tileAtPosition(each.x, each.y)=== tile.basicGround);
-    }
+    assertManyTiles(map, tile.basicGround);
 
     map.changeTiles(secondTiles);
-    for (let each of map.mapByTiles.keys()) {
-      if (each !== map._nullTile)
-        assert(map.tileAtPosition(each.x, each.y)=== tile.basicWall);
-    }
+    assertManyTiles(map, tile.basicWall);
   });
 
 });
