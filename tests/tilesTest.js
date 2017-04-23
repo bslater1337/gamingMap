@@ -1,7 +1,7 @@
 const mocha = require('mocha');
 const assert = require('assert');
 const testHelper = require('./testHelper.js');
-//const serverHelper = require("../serverHelper");
+const tokenHelper = require('../token.js');
 const tile = require("../tiles.js");
 
 let setupMap = testHelper.setupMap;
@@ -28,10 +28,12 @@ describe("tiles", function(){
 
   it("should be able to hold a token", function(){
     let map = setupMap(tile.NullTile);
-    map.addTileAt(1,1, tile.basicGround);
-    let tok = tile.token
+    map.changeTileAt(1,1, tile.basicGround);
+    let tok = new tokenHelper.Token("testToken", "dumbToken", map.tileAtPosition(1,1));
     map.tileAtPosition(1,1).token = tok;
-    assert(map.tileAtPosition(1,1).token === tok);
+    let startTile = map.tileAtPosition(1,1);
+    console.log(startTile);
+    assert(map.tileAtPosition(1,1).token.name === "testToken");
   });
 
   it("should find the neighbors of a tile",function(){
