@@ -26,13 +26,18 @@ describe("tiles", function(){
 
   });
 
+  it("should be able to change a tile using the constructor", function(){
+    let map = setupMap(tile.basicGround);
+    assert(map.tileAtPosition(1,1) instanceof tile.basicGround);
+    let wall = new tile.basicWall(1,1,map);
+    assert(map.tileAtPosition(1,1) instanceof tile.basicWall);
+  });
+
   it("should be able to hold a token", function(){
     let map = setupMap(tile.NullTile);
-    map.changeTileAt(1,1, tile.basicGround);
+    let island = new tile.basicGround(1,1, map);
     let tok = new tokenHelper.Token("testToken", "dumbToken", map.tileAtPosition(1,1));
-    map.tileAtPosition(1,1).token = tok;
-    let startTile = map.tileAtPosition(1,1);
-    console.log(startTile);
+    //map.tileAtPosition(1,1).token = tok;
     assert(map.tileAtPosition(1,1).token.name === "testToken");
   });
 
