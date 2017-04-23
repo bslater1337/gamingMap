@@ -19,6 +19,30 @@ exports.Token = class Token {
     canMove()   {
         return false;
     }
+    getRange(range){
+      let visit = (tile, range)=>{
+          let ret = [tile];
+          if (range)  {
+              for (let neighbor of tile.neighbors)    {
+                  if (neighbor.canMoveThrough)    {
+                      ret = ret.concat(visit(neighbor, range - 1));
+                  }
+              }
+          }
+          return ret;
+      };
+
+      let arr = visit(this.tile, range);
+      let ret = [];
+      let seen = new Set();
+      for (let tile of arr)   {
+          if (!seen.has(tile.hash))   {
+              ret.push(tile);
+              seen.add(tile.hash);
+          }
+      }
+      return ret;
+    }
 }
 
 exports.MovableToken = class MovableToken extends exports.Token {
@@ -48,28 +72,7 @@ exports.MovableToken = class MovableToken extends exports.Token {
     }
 
     get possibleDestinations()  {
-        let visit = (tile, range)=>{
-            let ret = [tile];
-            if (range)  {
-                for (let neighbor of tile.neighbors)    {
-                    if (neighbor.canMoveThrough)    {
-                        ret = ret.concat(visit(neighbor, range - 1));
-                    }
-                }
-            }
-            return ret;
-        };
-
-        let arr = visit(this.tile, this.movementSpeed);
-        let ret = [];
-        let seen = new Set();
-        for (let tile of arr)   {
-            if (!seen.has(tile.hash))   {
-                ret.push(tile);
-                seen.add(tile.hash);
-            }
-        }
-        return ret;
+      let destinations = this.getRange(this.movementSpeed);
+      return destinations;
     }
 }
-exports.token = new exports.MovableToken("unnamed token", "dumb token", undefined, 5);
