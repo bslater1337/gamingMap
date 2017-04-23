@@ -12,18 +12,9 @@ function distance(x1, y1, x2, y2)   {
 }
 
 describe("tiles", function(){
-  it("should be a board filled with null tiles", function(){
-    var map = setupMap(tile.NullTile);
-
-    for(var i = 0; i < 100; i++){
-      for(var j = 0; j < 100; j++){
-        assert(map.tileAtPosition(i,j) instanceof tile.NullTile);
-      }
-    }
-  });
 
   it("should have the correct properties when added", function(){
-    var map = setupMap(tile.NullTile);
+    let map = setupMap(tile.NullTile);
     _ = new tile.basicGround(1, 1, map);
     _ = new tile.basicWall(2,1, map);
     //assert for basic ground
@@ -40,9 +31,9 @@ describe("tiles", function(){
   });
 
   it("should be able to hold a token", function(){
-    var map = setupMap(tile.NullTile);
+    let map = setupMap(tile.NullTile);
     map.addTileAt(1,1, tile.basicGround);
-    var tok = tile.token
+    let tok = tile.token
     map.tileAtPosition(1,1).token = tok;
     assert(map.tileAtPosition(1,1).token === tok);
   });
@@ -73,18 +64,18 @@ describe("tiles", function(){
   });
 
   it("should be able to move a token to a position with correct tiles", function(){
-    var map = setupMap(tile.basicGround);
-    var moveArr = [map.tileAtPosition(0,0), map.tileAtPosition(1,1)];
-    var tok =  tile.token;
+    let map = setupMap(tile.basicGround);
+    let moveArr = [map.tileAtPosition(0,0), map.tileAtPosition(1,1)];
+    let tok =  tile.token;
     map.tileAtPosition(0,0).token = tok;
     tok.move(moveArr);
     assert(map.tileAtPosition(1,1).token === tok);
   });
 
   it("should not be able to move token to a new position with incorrect tiles", function(){
-    var map = setupMap(tile.basicWall);
-    var moveArr = [map.tileAtPosition(0,0), map.tileAtPosition(1,1)];
-    var tok = tile.token;
+    let map = setupMap(tile.basicWall);
+    let moveArr = [map.tileAtPosition(0,0), map.tileAtPosition(1,1)];
+    let tok = tile.token;
     map.changeTileAt(0,0,tile.basicGround);
     map.tileAtPosition(0,0).token = tok;
     tok.move(moveArr);
