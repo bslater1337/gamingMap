@@ -5,7 +5,9 @@ exports.AbstractAttack = class AbstractAttack{
     this.minRange = minRange || 0;
     this.damageType = damageType || "abstract";
   }
-
+  get range(){
+    return this.range;
+  }
   effects(attacker, attackee) {
     attackee.takeDamage(this.damage);
   }

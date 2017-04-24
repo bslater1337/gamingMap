@@ -79,12 +79,17 @@ exports.MovableToken = class MovableToken extends exports.Token {
 }
 
 exports.AttackingToken = class AttackingToken extends exports.MovableToken {
-  constructor(name, type, tile, movementSpeed){
+  constructor(name, type, tile, movementSpeed, hp, attack){
     super(name, type, tile, movementSpeed);
-    this.attack = new attackHelper.AbstractAttack(1,5);
+    this.attack = {};
+    //addAttack(attack);
+    this.health = hp;
   }
-  get possibleAttacks(){
-    let destination = this.getRange(this.attack.range);
+  addAttack(name, attack){
+    this.attack.name = attack;
+  }
+  getPossibleAttacks(attack){
+    let destination = this.getRange(attack.range);
     return destination;
   }
 }

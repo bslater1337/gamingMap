@@ -3,6 +3,7 @@ const assert = require('assert');
 const testHelper = require('./testHelper.js');
 const tokenHelper = require('../token.js');
 const tile = require("../tiles.js");
+const attackHelper = require('../attacks.js');
 
 let setupMap = testHelper.setupMap;
 let createChangesArray = testHelper.createChangesArray;
@@ -47,12 +48,16 @@ let tok = new tokenHelper.MovableToken("testToken", "dumbToken", map.tileAtPosit
       }
   });
 
-  it("should be able to have an attack and movement speed that are different", function(){
+  it("should be able to have possible attacks and movement that are different", function(){
     let map = setupMap(tile.basicGround);
     let startTile = map.tileAtPosition(5,5);
-    let attacker = new tokenHelper.AttackingToken("Attack Tester", "attacker", startTile, 3);
-    let possibleAttacks = attacker.possibleAttacks;
+    let attacker = new tokenHelper.AttackingToken("Attack Tester", "attacker", startTile, 3, 10);
+    let rangeAbstractAttack = new attackHelper.AbstractAttack(1, 5, 0);
+    console.log(rangeAbstractAttack);
+    //attacker.addAttack("abstract", rangeAbstractAttack);
+    let possibleAttacks = attacker.getPossibleAttacks(attacker.attack.abstract);
     let possibleDestinations = attacker.possibleDestinations;
+
     assert.equal(61, possibleAttacks.length);
     assert.equal(25, possibleDestinations.length);
     for (let each of possibleAttacks)   {
