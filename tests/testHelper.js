@@ -20,7 +20,7 @@ exports. createChangesArray = function(length, token){
       x : Math.floor(Math.random()*100),
       y : Math.floor(Math.random()*100),
       tile : token
-    }
-  };
+    };
+  }
   return arr;
 };
