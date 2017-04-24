@@ -5,11 +5,11 @@ exports.AbstractAttack = class AbstractAttack{
     this.minRange = minRange || 0;
     this.damageType = damageType || "abstract";
   }
-  
+
   effects(attacker, attackee) {
     attackee.takeDamage(this.damage);
   }
-}
+};
 
 exports.BowAttack = class BowAttack extends exports.AbstractAttack  {
   effects(attacker, attackee) {
@@ -18,6 +18,4 @@ exports.BowAttack = class BowAttack extends exports.AbstractAttack  {
           super.effects(attacker, attackee);
         }
   }
-}
-
-//sideEffects
+};

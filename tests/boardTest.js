@@ -34,7 +34,7 @@ describe("Board Functions", function(){
 
   it("should fail to remove a tile from a map", function(){
     let map = setupMap(tile.NullTile);
-    let smallMap = new tile.board;
+    let smallMap = new tile.board();
     _ = new tile.basicGround(1,0, smallMap);
 
     map.removeTileAt(1,1);
