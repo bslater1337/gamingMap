@@ -86,10 +86,10 @@ exports.AttackingToken = class AttackingToken extends exports.MovableToken {
     this.health = hp;
   }
   addAttack(name, attack){
-    this.attack.name = attack;
+    this.attack[name] = attack;
   }
   getPossibleAttacks(attack){
-    let destination = this.getRange(attack.range);
+    let destination = this.getRange(attack.getRange);
     return destination;
   }
 }
