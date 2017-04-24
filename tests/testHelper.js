@@ -1,7 +1,7 @@
 const tile = require("../tiles.js");
 
 exports.setupMap = function(token){
-  var map = new tile.board;
+  var map = new tile.board();
   for(var i = 0; i < 100; i++){
     if (map[i] === undefined) {
       map[i] = [];
@@ -11,16 +11,16 @@ exports.setupMap = function(token){
     }
   }
   return map;
-}
+};
 
 exports. createChangesArray = function(length, token){
-  var arr = []
+  var arr = [];
   for(var i = 0; i < length; i++){
     var temp = {
       x : Math.floor(Math.random()*100),
       y : Math.floor(Math.random()*100),
       tile : token
     }
-  }
+  };
   return arr;
-}
+};
