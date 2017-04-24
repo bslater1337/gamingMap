@@ -94,7 +94,7 @@ exports.board = class Board {
       }
       return neighbors;
     }
-}
+};
 
 const NullUUID = uuid();
 
@@ -118,7 +118,7 @@ exports.NullTile = class NullTile {
     isNeighbor()  {
       return false;
     }
-}
+};
 
 exports.Tile = class Tile extends exports.NullTile {
     constructor(x, y, board, special_neighbors) {
@@ -173,11 +173,11 @@ exports.Tile = class Tile extends exports.NullTile {
         }
         return false;
     }
-}
+};
 
 exports.basicGround = class basicGround extends exports.Tile {
 
-}
+};
 exports.basicWall = class basicWall extends exports.Tile {
   constructor(x, y, board, special_neighbors)  {
       super(x, y, board, special_neighbors);
@@ -191,4 +191,4 @@ exports.basicWall = class basicWall extends exports.Tile {
    size : 1,
    token : null
    */
-}
+};

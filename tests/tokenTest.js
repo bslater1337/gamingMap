@@ -56,7 +56,6 @@ let tok = new tokenHelper.MovableToken("testToken", "dumbToken", map.tileAtPosit
     attacker.addAttack("testAttack", rangeAbstractAttack);
     let possibleAttacks = attacker.getPossibleAttacks(attacker.attack["testAttack"]);
     let possibleDestinations = attacker.possibleDestinations;
-    console.log(possibleAttacks.length);
 
     assert.equal(61, possibleAttacks.length);
     assert.equal(25, possibleDestinations.length);
