@@ -31,6 +31,7 @@ exports.board = class Board {
             mapByCoords[tile.x][tile.y] = tile.hash;
             mapByHashes[tile.hash] = tile.coords;
         }
+        return ret;
     }
 
     equals(aBoard)  {
