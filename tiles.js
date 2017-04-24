@@ -1,4 +1,5 @@
 const uuid = require('uuid/v4');
+const token = require('./token.js');
 
 exports.board = class Board {
     constructor() {
@@ -16,6 +17,7 @@ exports.board = class Board {
         for (let tile of this.mapByTiles.keys())   {
             map[tile.hash] = tile.serialized;
         }
+        ret['uuid'] = this.UUID;
         return ret;
     }
 
@@ -31,6 +33,18 @@ exports.board = class Board {
             mapByCoords[tile.x][tile.y] = tile.hash;
             mapByHashes[tile.hash] = tile.coords;
         }
+        return ret;
+    }
+
+    static fromSerialized(serialized)  {
+        let ret = new exports.board();
+        ret._nullTile = exports.NullTile.fromBoardAndID(this, serialized['nullID']);
+        for (let hash of Object.keys(serialized['map']))    {
+            ret.addTileAt(
+                ...(serialized['map'][hash]['coords']),
+                exports.recreateTile(board, hash, serialized['map'][hash]));
+        }
+        ret.hash = ret.UUID = serialized['uuid'];
         return ret;
     }
 
@@ -121,11 +135,21 @@ exports.board = class Board {
     }
 }
 
+exports.recreateTile = function recreateTile(board, hash, serialized)   {
+    return exports[serialized['type']].fromSerialized(board, hash, serialized);
+}
+
 const NullUUID = uuid();
 
 exports.NullTile = class NullTile {
     constructor(board)  {
         this.board = board;
+    }
+
+    static fromBoardAndID(board, id)    {
+        let ret = new exports.NullTile(board);
+        ret.UUID = id;
+        return ret;
     }
 
     get neighbors() {
@@ -166,13 +190,15 @@ exports.Tile = class Tile extends exports.NullTile {
 
     get weakSerialized()    {
         let ret = {
+            'type': 'Tile',
             'board': this.board.hash,
             'uuid': this.UUID,
             'color': this.color,
             'difficultTurrain': this.difficultTurrain,
             'transparent': this.transparent,
             'canMoveThrough': this.canMoveThrough,
-            'size': this.size
+            'size': this.size,
+            'coords': this.coords
         };
         if (this.token !== null)    {
             ret['tokens'] = [this.token.weakSerialized];
@@ -192,6 +218,22 @@ exports.Tile = class Tile extends exports.NullTile {
             ret['tokens'] = [this.token.serialized];
         }
         return ret;
+    }
+
+    static fromSerialized(board, hash, serialized)  {
+        let tile = new exports.Tile(...serialized['coords'], board, serialized['special_neighbors']);
+        tile.UUID = serialized['uuid'];
+        tile.color = serialized['color'];
+        tile.difficultTurrain = serialized['difficultTurrain'];
+        tile.transparent = serialized['transparent'];
+        tile.canMoveThrough = serialized['canMoveThrough'];
+        tile.size = serialized['size'];
+        if (serialized['tokens'] !== undefined) {
+            for (let token_rep of serialized['tokens']) {
+                token.recreateToken(tile, token_rep);
+            }
+        }
+        return tile;
     }
 
     get coords()  {
@@ -231,12 +273,35 @@ exports.Tile = class Tile extends exports.NullTile {
 }
 
 exports.basicGround = class basicGround extends exports.Tile {
+    get serialized()    {
+        let ret = super.serialized;
+        ret['type'] = 'basicGround';
+        return ret;
+    }
+
+    get weakSerialized()    {
+        let ret = super.weakSerialized;
+        ret['type'] = 'basicGround';
+        return ret;
+    }
 
 }
 exports.basicWall = class basicWall extends exports.Tile {
   constructor(x, y, board, special_neighbors)  {
       super(x, y, board, special_neighbors);
       this.canMoveThrough = false;
+  }
+
+    get serialized()    {
+        let ret = super.serialized;
+        ret['type'] = 'basicWall';
+        return ret;
+    }
+
+  get weakSerialized()    {
+      let ret = super.weakSerialized;
+      ret['type'] = 'basicWall';
+      return ret;
   }
   /*
    difficultTurrain : false,

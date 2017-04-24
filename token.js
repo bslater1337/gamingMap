@@ -1,6 +1,10 @@
 const uuid = require('uuid/v4');
 const attackHelper = require('./attacks.js');
 
+exports.recreateToken = function recreateToken(tile, serialized) {
+    return exports[serialized['class']].fromSerialized(tile, serialized);
+}
+
 exports.Token = class Token {
     constructor(name, type, tile) {
         this.name = name;
@@ -15,6 +19,7 @@ exports.Token = class Token {
 
     get serialized()    {
         return {
+            'class': 'Token',
             'name': this.name,
             'type': this.type,
             'uuid': this.UUID
@@ -23,10 +28,21 @@ exports.Token = class Token {
 
     get weakSerialized()    {
         return {
+            'class': 'Token',
             'name': this.name,
             'type': this.type,
             'uuid': this.UUID
         };
+    }
+
+    static fromSerialized(tile, serialized) {
+        let token = new exports.Token(
+            serialized['name'],
+            serialized['type'],
+            tile
+        );
+        token.UUID = token.hash = serialized['uuid'];
+        return token;
     }
 
     equals(aToken)  {
@@ -70,12 +86,14 @@ exports.MovableToken = class MovableToken extends exports.Token {
 
     get serialized()    {
         let ret = super.serialized;
+        ret['class'] = 'MovableToken';
         ret['movementSpeed'] = this.movementSpeed;
         return ret;
     }
 
     get weakSerialized()    {
         let ret = super.weakSerialized;
+        ret['class'] = 'MovableToken';
         ret['movementSpeed'] = this.movementSpeed;
         return ret;
     }
@@ -111,6 +129,19 @@ exports.AttackingToken = class AttackingToken extends exports.MovableToken {
     super(name, type, tile, movementSpeed);
     this.attack = new attackHelper.AbstractAttack(1,5);
   }
+
+  get serialized()  {
+      let ret = super.serialized;
+      ret['class'] = 'AttackingToken';
+      return ret;
+  }
+
+  get weakSerialized()  {
+      let ret = super.weakSerialized;
+      ret['class'] = 'AttackingToken';
+      return ret;
+  }
+
   get possibleAttacks(){
     let destination = this.getRange(this.attack.range);
     return destination;
