@@ -1,4 +1,5 @@
 const uuid = require('uuid/v4');
+const attackHelper = require('./attacks.js');
 
 exports.Token = class Token {
     constructor(name, type, tile) {
@@ -75,4 +76,15 @@ exports.MovableToken = class MovableToken extends exports.Token {
       let destinations = this.getRange(this.movementSpeed);
       return destinations;
     }
+}
+
+exports.AttackingToken = class AttackingToken extends exports.MovableToken {
+  constructor(name, type, tile, movementSpeed){
+    super(name, type, tile, movementSpeed);
+    this.attack = new attackHelper.AbstractAttack(1,5);
+  }
+  get possibleAttacks(){
+    let destination = this.getRange(this.attack.range);
+    return destination;
+  }
 }
