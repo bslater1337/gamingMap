@@ -204,6 +204,13 @@ exports.Tile = class Tile extends exports.NullTile {
     get y() {
         return this.coords[1];
     }
+    addToken(token){
+      this.token = token;
+    }
+
+    removeToken(token){
+      this.token = null;
+    }
 
     get neighbors() {
         let neighbors = this.board.findNeighbors(this);
@@ -239,124 +246,3 @@ exports.basicWall = class basicWall extends exports.Tile {
    token : null
    */
 }
-
-exports.Token = class Token {
-    constructor(name, type, tile) {
-        this.name = name;
-        this.type = type;
-        this.tile = tile;
-        // this.tile.addToken(this);
-        this.UUID = this.hash = uuid();
-    }
-
-    get serialized()    {
-        return {
-            'name': this.name,
-            'type': this.type,
-            'uuid': this.UUID
-        };
-    }
-
-    get weakSerialized()    {
-        return {
-            'name': this.name,
-            'type': this.type,
-            'uuid': this.UUID
-        };
-    }
-
-    equals(aToken)  {
-        return this.hash === aToken.hash;
-    }
-
-    canMove()   {
-        return false;
-    }
-}
-
-exports.MovableToken = class MovableToken extends exports.Token {
-    constructor(name, type, tile, movementSpeed)  {
-        super(name, type, tile);
-        this.movementSpeed = movementSpeed;
-    }
-
-    get serialized()    {
-        let ret = super.serialized;
-        ret['movementSpeed'] = this.movementSpeed;
-        return ret;
-    }
-
-    get weakSerialized()    {
-        let ret = super.weakSerialized;
-        ret['movementSpeed'] = this.movementSpeed;
-        return ret;
-    }
-
-    canMove(arrayOfTiles){
-        let prev;
-        for (let tile of arrayOfTiles)  {
-            if (!tile.canMoveThrough ||
-            (prev !== undefined && prev.isNeighbor(tile)))  {
-                return false;
-            }
-            prev = tile;
-        }
-        return true;
-   }
-
-    move(arrayOfTiles){
-        if(this.canMove(arrayOfTiles)){
-            arrayOfTiles[0].token = null;
-            this.tile = arrayOfTiles[arrayOfTiles.length -1];
-            this.tile.token = this;
-        }
-    }
-
-    get possibleDestinations()  {
-        let visit = (tile, range)=>{
-            let ret = [tile];
-            if (range)  {
-                for (let neighbor of tile.neighbors)    {
-                    if (neighbor.canMoveThrough)    {
-                        ret = ret.concat(visit(neighbor, range - 1));
-                    }
-                }
-            }
-            return ret;
-        };
-
-        let arr = visit(this.tile, this.movementSpeed);
-        let ret = [];
-        let seen = new Set();
-        for (let tile of arr)   {
-            if (!seen.has(tile.hash))   {
-                ret.push(tile);
-                seen.add(tile.hash);
-            }
-        }
-        return ret;
-        // let visited = new Set([this.tile.hash]);
-        // let this_time = this.tile.neighbors;
-        // let next_time = [];
-        // let range = this.movementSpeed;
-        //
-        // while (this_time.size && range) {
-        //     for (let tile of this_time) {
-        //         for (let neighbor of tile.neighbors)    {
-        //             if (!visited.has(neighbor.hash))    {
-        //                 next_time.push(tile);
-        //             }
-        //         }
-        //         visited.add(tile.hash);
-        //     }
-        //     range--;
-        //     this_time = next_time;
-        //     next_time = [];
-        // }
-        // for (let tile of this_time) {
-        //     visited.add(tile.hash);
-        // }
-        // return visited;
-    }
-}
-exports.token = new exports.MovableToken("unnamed token", "dumb token", undefined, 5);
