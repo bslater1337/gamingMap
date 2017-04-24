@@ -9,6 +9,30 @@ exports.board = class Board {
         this.UUID = this.hash = uuid();
     }
 
+    get serialized() {
+        let ret = {};
+        ret['nullID'] = this._nullTile.hash;
+        let map = ret['map'] = {};
+        for (let tile of this.mapByTiles.keys())   {
+            map[tile.hash] = tile.serialized;
+        }
+        return ret;
+    }
+
+    get weakSerialized()    {
+        let ret = {};
+        ret['nullID'] = this._nullTile.hash;
+        let mapByHashes = ret['mapByHashes'] = {};
+        let mapByCoords = ret['mapByCoords'] = {};
+        for (let tile of this.mapByTiles.keys())   {
+            if (mapByCoords[tile.x] === undefined)  {
+                mapByCoords[tile.x] = {};
+            }
+            mapByCoords[tile.x][tile.y] = tile.hash;
+            mapByHashes[tile.hash] = tile.coords;
+        }
+    }
+
     equals(aBoard)  {
         return this.hash === aBoard.hash;
     }
@@ -139,6 +163,36 @@ exports.Tile = class Tile extends exports.NullTile {
         }
     }
 
+    get weakSerialized()    {
+        let ret = {
+            'board': this.board.hash,
+            'uuid': this.UUID,
+            'color': this.color,
+            'difficultTurrain': this.difficultTurrain,
+            'transparent': this.transparent,
+            'canMoveThrough': this.canMoveThrough,
+            'size': this.size
+        };
+        if (this.token !== null)    {
+            ret['tokens'] = [this.token.weakSerialized];
+        }
+        if (this.special_neighbors.length)  {
+            ret['special_neighbors'] = [];
+            for (let neighbor of this.special_neighbors)    {
+                ret['special_neighbors'].push(neighbor.weakSerialized);
+            }
+        }
+        return ret;
+    }
+
+    get serialized()    {
+        let ret = this.weakSerialized;
+        if (this.token !== null)    {
+            ret['tokens'] = [this.token.serialized];
+        }
+        return ret;
+    }
+
     get coords()  {
         return this.board.whereIsTile(this);
     }
@@ -195,6 +249,22 @@ exports.Token = class Token {
         this.UUID = this.hash = uuid();
     }
 
+    get serialized()    {
+        return {
+            'name': this.name,
+            'type': this.type,
+            'uuid': this.UUID
+        };
+    }
+
+    get weakSerialized()    {
+        return {
+            'name': this.name,
+            'type': this.type,
+            'uuid': this.UUID
+        };
+    }
+
     equals(aToken)  {
         return this.hash === aToken.hash;
     }
@@ -208,6 +278,18 @@ exports.MovableToken = class MovableToken extends exports.Token {
     constructor(name, type, tile, movementSpeed)  {
         super(name, type, tile);
         this.movementSpeed = movementSpeed;
+    }
+
+    get serialized()    {
+        let ret = super.serialized;
+        ret['movementSpeed'] = this.movementSpeed;
+        return ret;
+    }
+
+    get weakSerialized()    {
+        let ret = super.weakSerialized;
+        ret['movementSpeed'] = this.movementSpeed;
+        return ret;
     }
 
     canMove(arrayOfTiles){
