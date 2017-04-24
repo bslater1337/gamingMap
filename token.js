@@ -44,7 +44,7 @@ exports.Token = class Token {
       }
       return ret;
     }
-}
+};
 
 exports.MovableToken = class MovableToken extends exports.Token {
     constructor(name, type, tile, movementSpeed)  {
@@ -76,7 +76,7 @@ exports.MovableToken = class MovableToken extends exports.Token {
       let destinations = this.getRange(this.movementSpeed);
       return destinations;
     }
-}
+};
 
 exports.AttackingToken = class AttackingToken extends exports.MovableToken {
   constructor(name, type, tile, movementSpeed, hp, attack){
@@ -92,4 +92,4 @@ exports.AttackingToken = class AttackingToken extends exports.MovableToken {
     let destination = this.getRange(attack.range);
     return destination;
   }
-}
+};
