@@ -1,8 +1,12 @@
 {
   "devDependencies": {
+    "istanbul": "^0.4.5",
     "mocha": "^3.2.0"
   },
   "dependencies": {
     "uuid": "^3.0.1"
+  },
+  "scripts": {
+    "test": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha tests/"
   }
 }
