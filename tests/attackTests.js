@@ -18,7 +18,7 @@ describe("Attacks", function(){
     let rangeAbstractAttack = new attackHelper.AbstractAttack(1, 5, 0);
     attacker.addAttack("testAttack", rangeAbstractAttack);
     assert.equal(10, defender.health);
-    attacker.attack("testAttack", defender);
+    attacker.hit("testAttack", defender);
     assert.equal(9, defender.health);
   });
 });
