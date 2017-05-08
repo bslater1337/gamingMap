@@ -92,4 +92,10 @@ exports.AttackingToken = class AttackingToken extends exports.MovableToken {
     let destination = this.getRange(attack.range);
     return destination;
   }
+  hit(name, defender){
+    this.attack[name].effects(this, defender);
+  }
+  takeDamage(damage){
+    this.health -= damage;
+  }
 };
