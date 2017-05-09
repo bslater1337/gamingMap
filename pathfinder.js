@@ -13,7 +13,7 @@
 //      }
 //  }
 
-function pathfinding(possibleNodes, startNode, finalNode){
+exports.pathfinding = function(possibleNodes, startNode, finalNode){
   if(!finalNode.canMoveThrough){
     return [];
   }
@@ -35,7 +35,7 @@ function pathfinding(possibleNodes, startNode, finalNode){
       return path;
     }
     //get currentNode.neighbors
-    let nextPossibleNodes = currentNode.getNeighbors;
+    let nextPossibleNodes = currentNode.neighbors;
     //add g and h values where g is the cost and h is the manhatten distance. add these to get f. Choose the lowest f value.
     nextPossibleNodes.map(function(each){
       let position = each.board.whereIsTile(each);
