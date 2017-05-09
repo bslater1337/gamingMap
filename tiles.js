@@ -129,6 +129,7 @@ exports.Tile = class Tile extends exports.NullTile {
         this.color = null;
         this.transparent = true;
         this.canMoveThrough = true;
+        this.cost = 1;
         this.size = 1;
         this.token = null;
         this.special_neighbors = special_neighbors || [];
