@@ -1,5 +1,5 @@
-
 $(function () {
+
   var socket = io();
   var canvas = document.getElementById("c");
   var ctx = canvas.getContext("2d");
@@ -15,6 +15,15 @@ $(function () {
       canvas.add(new fabric.Line([ 0, i * grid, 600, i * grid], { stroke: '#ccc', selectable: false }))
     }
   }
+  function escapeHTML(theString) {
+	return theString
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/\//g, "&#47;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#39;");
+}
   createGrid();
   // add objects This for loop will create test objects for the GUI
   for(i=0; i < 4; i++){
@@ -67,6 +76,19 @@ $(function () {
   socket.on('chat message', function(msg){
     $('#messages').append($('<li>').text(msg));
   });
+
+  socket.on("loginValidation", function(msg){  //server returns boolean - success
+ 		if(msg){ //this should only happen on a valid login
+ 			//$("#loginScreen").hide();
+ 		  //$("#rules").hide();
+ 			//$(".userTable").show();
+ 			//$("#ready").show();
+ 		}
+ 		else{
+ 			alert("Username may be taken or password may be incorrect, try again.");
+ 		}
+ 	});
+
   socket.on('server map update', function(msg){
     var test = msg
     canvas.clear()
@@ -88,4 +110,23 @@ $(function () {
     });
   });
 
+  function login(message){
+ 		user = $("#username").val();
+ 		var userCredentials = {
+ 			username: user,
+ 			password: $("#password").val()
+ 		};
+ 		userCredentials.username = escapeHTML(userCredentials.username); //sanitize the input username before sending it to the server
+ 		userCredentials.password = escapeHTML(userCredentials.password); //sanitize the input password before sending it to the server
+ 		userCredentials.message = message;
+ 		socket.emit("login", userCredentials);
+ 	}
+ 	$("#loginButton").click(function(){
+    login("login");
+    console.log('clicked login button');
+  });
+ 	$("#createButton").click(function(){
+    login("create");
+    console.log('clicked create button');
+  });
 });
