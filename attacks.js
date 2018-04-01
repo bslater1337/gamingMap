@@ -9,7 +9,7 @@ exports.AbstractAttack = class AbstractAttack{
   effects(attacker, attackee) {
     attackee.takeDamage(this.damage);
   }
-}
+};
 
 exports.BowAttack = class BowAttack extends exports.AbstractAttack  {
   effects(attacker, attackee) {
@@ -18,6 +18,4 @@ exports.BowAttack = class BowAttack extends exports.AbstractAttack  {
           super.effects(attacker, attackee);
         }
   }
-}
-
-//sideEffects
+};

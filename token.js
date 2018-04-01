@@ -76,7 +76,7 @@ exports.Token = class Token {
       }
       return ret;
     }
-}
+};
 
 exports.MovableToken = class MovableToken extends exports.Token {
     constructor(name, type, tile, movementSpeed)  {
@@ -122,12 +122,14 @@ exports.MovableToken = class MovableToken extends exports.Token {
       let destinations = this.getRange(this.movementSpeed);
       return destinations;
     }
-}
+};
 
 exports.AttackingToken = class AttackingToken extends exports.MovableToken {
-  constructor(name, type, tile, movementSpeed){
+  constructor(name, type, tile, movementSpeed, hp, attack){
     super(name, type, tile, movementSpeed);
-    this.attack = new attackHelper.AbstractAttack(1,5);
+    this.attack = {};
+    //addAttack(attack);
+    this.health = hp;
   }
 
   get serialized()  {
@@ -146,4 +148,10 @@ exports.AttackingToken = class AttackingToken extends exports.MovableToken {
     let destination = this.getRange(this.attack.range);
     return destination;
   }
-}
+  hit(name, defender){
+    this.attack[name].effects(this, defender);
+  }
+  takeDamage(damage){
+    this.health -= damage;
+  }
+};

@@ -133,7 +133,7 @@ exports.board = class Board {
       }
       return neighbors;
     }
-}
+};
 
 exports.recreateTile = function recreateTile(board, hash, serialized)   {
     return exports[serialized['type']].fromSerialized(board, hash, serialized);
@@ -167,7 +167,7 @@ exports.NullTile = class NullTile {
     isNeighbor()  {
       return false;
     }
-}
+};
 
 exports.Tile = class Tile extends exports.NullTile {
     constructor(x, y, board, special_neighbors) {
@@ -178,6 +178,7 @@ exports.Tile = class Tile extends exports.NullTile {
         this.color = null;
         this.transparent = true;
         this.canMoveThrough = true;
+        this.cost = 1;
         this.size = 1;
         this.token = null;
         this.special_neighbors = special_neighbors || [];
@@ -270,7 +271,7 @@ exports.Tile = class Tile extends exports.NullTile {
         }
         return false;
     }
-}
+};
 
 exports.basicGround = class basicGround extends exports.Tile {
     get serialized()    {
@@ -285,7 +286,7 @@ exports.basicGround = class basicGround extends exports.Tile {
         return ret;
     }
 
-}
+};
 exports.basicWall = class basicWall extends exports.Tile {
   constructor(x, y, board, special_neighbors)  {
       super(x, y, board, special_neighbors);
@@ -311,4 +312,4 @@ exports.basicWall = class basicWall extends exports.Tile {
    size : 1,
    token : null
    */
-}
+};
