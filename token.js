@@ -109,6 +109,16 @@ exports.MovableToken = class MovableToken extends exports.Token {
         }
         return true;
    }
+   static fromSerialized(tile, serialized) {
+       let token = new exports.MovableToken(
+           serialized['name'],
+           serialized['type'],
+           tile,
+           serialized['movementSpeed']
+       );
+       token.UUID = token.hash = serialized['uuid'];
+       return token;
+   }
 
     move(arrayOfTiles){
         if(this.canMove(arrayOfTiles)){

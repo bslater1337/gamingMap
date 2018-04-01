@@ -74,6 +74,7 @@ describe("tiles", function(){
 */
     let test_map = setupMap(tile.NullTile);
     let ground = new tile.basicGround(0, 0, test_map);
+    let tok = new tokenHelper.MovableToken("testToken", "dumbToken", test_map.tileAtPosition(0,0));
     serial_map = test_map.serialized;
     new_map = tile.fromSerialized(serial_map);
     assert(new_map instanceof tile.board );
