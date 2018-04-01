@@ -66,4 +66,19 @@ describe("tiles", function(){
     assert(!portal.isNeighbor(upTile));
   });
 
+  it("should be able to get from serialized",function(){
+/*
+  00|10|20
+  01|11|21
+  02|12|22
+*/
+    let test_map = setupMap(tile.NullTile);
+    let ground = new tile.basicGround(0, 0, test_map);
+    serial_map = test_map.serialized;
+    new_map = tile.fromSerialized(serial_map);
+    assert(new_map instanceof tile.board );
+    assert(new_map.tileAtPosition(0,0) instanceof tile.basicGround);
+
+  });
+
 });

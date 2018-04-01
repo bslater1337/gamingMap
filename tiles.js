@@ -36,17 +36,6 @@ exports.board = class Board {
         return ret;
     }
 
-    static fromSerialized(serialized)  {
-        let ret = new exports.board();
-        ret._nullTile = exports.NullTile.fromBoardAndID(this, serialized['nullID']);
-        for (let hash of Object.keys(serialized['map']))    {
-            ret.addTileAt(
-                ...(serialized['map'][hash]['coords']),
-                exports.recreateTile(board, hash, serialized['map'][hash]));
-        }
-        ret.hash = ret.UUID = serialized['uuid'];
-        return ret;
-    }
 
     equals(aBoard)  {
         return this.hash === aBoard.hash;
@@ -135,8 +124,59 @@ exports.board = class Board {
     }
 };
 
+exports.fromSerialized = function(serialized)  {
+    let ret = new exports.board();
+    ret._nullTile = exports.NullTile.fromBoardAndID(this, serialized['nullID']);
+    for (let hash of Object.keys(serialized['map']))    {
+        ret.addTileAt(
+            ...(serialized['map'][hash]['coords']),
+            exports.recreateTile(ret, hash, serialized['map'][hash]));
+    }
+    ret.hash = ret.UUID = serialized['uuid'];
+    return ret;
+}
+
+// exports.recreateBoard = function(serialized){
+//   var new_board = new exports.board()
+//   return new_board.fromSerialized(serialized)
+// }
+
 exports.recreateTile = function recreateTile(board, hash, serialized)   {
-    return exports[serialized['type']].fromSerialized(board, hash, serialized);
+    //console.log(serialized['type'])
+    //return exports[serialized['type']].fromSerialized(board, hash, serialized);
+    if(serialized['type'] == 'basicGround'){
+        let tile = new exports.basicGround(...serialized['coords'], board, serialized['special_neighbors']);
+        tile.UUID = serialized['uuid'];
+        tile.color = serialized['color'];
+        tile.difficultTurrain = serialized['difficultTurrain'];
+        tile.transparent = serialized['transparent'];
+        tile.canMoveThrough = serialized['canMoveThrough'];
+        tile.size = serialized['size'];
+        if (serialized['tokens'] !== undefined) {
+            for (let token_rep of serialized['tokens']) {
+                token.recreateToken(tile, token_rep);
+            }
+        }
+        return tile;
+    }
+    else if(serialized['type'] == 'basicWall'){
+      let tile = new exports.basicGround(...serialized['coords'], board, serialized['special_neighbors']);
+      tile.UUID = serialized['uuid'];
+      tile.color = serialized['color'];
+      tile.difficultTurrain = serialized['difficultTurrain'];
+      tile.transparent = serialized['transparent'];
+      tile.canMoveThrough = serialized['canMoveThrough'];
+      tile.size = serialized['size'];
+      if (serialized['tokens'] !== undefined) {
+          for (let token_rep of serialized['tokens']) {
+              token.recreateToken(tile, token_rep);
+          }
+      }
+      return tile;
+    }
+    else{
+      return exports.NullTile(board)
+    }
 }
 
 const NullUUID = uuid();
@@ -221,7 +261,7 @@ exports.Tile = class Tile extends exports.NullTile {
         return ret;
     }
 
-    static fromSerialized(board, hash, serialized)  {
+    fromSerialized(board, hash, serialized)  {
         let tile = new exports.Tile(...serialized['coords'], board, serialized['special_neighbors']);
         tile.UUID = serialized['uuid'];
         tile.color = serialized['color'];

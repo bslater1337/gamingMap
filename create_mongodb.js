@@ -25,10 +25,11 @@ MongoClient.connect(url, function(err, db) {
   //   console.log("1 document inserted");
   //   db.close();
   // });
-  var map = setupMap(tile.basicGround)
-  console.log(map)
-
-  dbo.collection("maps").insertOne(map, function(err, res) {
+  var test_map = setupMap(tile.basicGround);
+  var test_token = new token.MovableToken("TOKEN", "test", test_map.tileAtPosition(0, 0), 3);
+  var serial_map = test_map.serialized;
+  var obj = { name: 'test_map', serial_map}
+  dbo.collection("maps").insertOne(serial_map, function(err, res) {
     if (err) throw err;
     console.log("1 document inserted");
     db.close();
