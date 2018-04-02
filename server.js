@@ -12,6 +12,12 @@ const attacks = require('./attacks.js');
 var url = "mongodb://localhost:27017/";
 var players = [];
 var dbo;
+var game_map;
+
+
+
+
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 function userQuery(db, userName, callback) {
@@ -27,6 +33,20 @@ function userQuery(db, userName, callback) {
 	});
 }
 
+function mapQuery(db, map_name, callback) {
+	var collection = db.collection("maps");
+	collection.find({name: map_name}).toArray(function(err, docs) {
+		if (err != null) {
+			console.log("Error on attempting to find: " + err);
+			callback("error"); //error on trying to query the db
+		}
+		else{
+      callback(docs); //the docs object is null if the name doesn't exist
+    }
+	});
+}
+
+
 function createUser(db, userName, passWord, callback){ //we don't have to check for uniqueness in UN here
 	var collection = db.collection("users");
 	collection.insertOne({name : userName, password: passWord}, function(err, result){
@@ -36,7 +56,23 @@ function createUser(db, userName, passWord, callback){ //we don't have to check 
 }
 
 
+
+
 io.on('connection', function(socket){
+
+	if(game_map == null){
+		mapQuery(dbo, "test_map", function(result){
+			if (result == "error"){
+				return;
+			}
+			else{
+				var serialmap = result[0].serial_map
+				game_map = tile.fromSerialized(serialmap);
+				io.emit('server map update', game_map.serialized);
+			}
+	});
+}
+
   function getPlayerIndexBySocket(socket){
 		return players.map(function(e) { return e.socketid; }).indexOf(socket);
 	}
@@ -51,7 +87,7 @@ io.on('connection', function(socket){
     console.log(message)
   });
   socket.on('client map update', function(msg){
-    io.emit('server map update', msg);
+    io.emit('server map update', game_map.serialized);
     console.log(msg)
   })
   socket.on('disconnect', function(){

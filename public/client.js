@@ -25,7 +25,7 @@ $(function () {
 		.replace(/'/g, "&#39;");
 }
   createGrid();
-  // add objects This for loop will create test objects for the GUI
+  //add objects This for loop will create test objects for the GUI
   for(i=0; i < 4; i++){
     let test = new fabric.Rect({
       left: i * 100,
@@ -79,7 +79,7 @@ $(function () {
 
   socket.on("loginValidation", function(msg){  //server returns boolean - success
  		if(msg){ //this should only happen on a valid login
- 			//$("#loginScreen").hide();
+ 			$("#loginScreen").hide();
  		  //$("#rules").hide();
  			//$(".userTable").show();
  			//$("#ready").show();
@@ -90,23 +90,25 @@ $(function () {
  	});
 
   socket.on('server map update', function(msg){
-    var test = msg
+    var test = msg.map
     canvas.clear()
     createGrid();
     console.log(test)
-    test.forEach(function(element){
+    Object.keys(test).forEach(function(element){
       let new_rect = new fabric.Rect({
-        left: element.left,
-        top: element.top,
+        left: test[element].coords[0] * 50,
+        top: test[element].coords[1] * 50,
         width: 50,
         height: 50,
         fill: '#faa',
         originX: 'left',
         originY: 'top',
         centeredRotation: true,
-        id: element.id
+        uuid: test[element].uuid
       });
-      canvas.add(new_rect)
+      squares.push(new_rect);
+      canvas.add(new_rect);
+      new_rect = null;
     });
   });
 

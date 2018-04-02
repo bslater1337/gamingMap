@@ -29,7 +29,7 @@ MongoClient.connect(url, function(err, db) {
   var test_token = new token.MovableToken("TOKEN", "test", test_map.tileAtPosition(0, 0), 3);
   var serial_map = test_map.serialized;
   var obj = { name: 'test_map', serial_map}
-  dbo.collection("maps").insertOne(serial_map, function(err, res) {
+  dbo.collection("maps").insertOne(obj, function(err, res) {
     if (err) throw err;
     console.log("1 document inserted");
     db.close();
