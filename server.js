@@ -72,7 +72,6 @@ io.on('connection', function(socket){
 			}
 	});
 }
-
   function getPlayerIndexBySocket(socket){
 		return players.map(function(e) { return e.socketid; }).indexOf(socket);
 	}
@@ -86,6 +85,18 @@ io.on('connection', function(socket){
     io.emit('chat message', message);
     console.log(message)
   });
+
+	socket.on('move token', function(move_obj){
+		console.log('yoyoyou');
+    //console.log(move_obj);
+		old_tile = game_map.tileAtPosition(move_obj.old_coords[0], move_obj.old_coords[1]);
+		new_tile = game_map.tileAtPosition(move_obj.new_coords[1], move_obj.new_coords[0]);
+		move_array = [old_tile, new_tile];
+		//console.log(move_array);
+		old_tile.token.move(move_array);
+		io.emit('server map update', game_map.serialized);
+  });
+
   socket.on('client map update', function(msg){
     io.emit('server map update', game_map.serialized);
     console.log(msg)

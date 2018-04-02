@@ -50,13 +50,31 @@ $(function () {
   function updateCanvas(grid){
     //console.log(grid);
     let items = [];
+    console.log('change');
     grid._objects.forEach(function(element){
+      //check for token moving
+      if('tile' in element){
+        items.push({
+          left: element.left,
+          top: element.top,
+          tile: element.tile,
+          uuid: element.uuid,
+          old_coords: element.original_coords
+        });
+      }
 
-      if('id' in element){
-        items.push({left: element.left, top: element.top, id: element.id});
+    });
+    items.forEach(function(each){
+      if(each.top != each.old_coords[0] * 50 || each.left != each.old_coords[1] * 50){
+        move_obj = {
+          tile: each.tile,
+          old_coords: each.old_coords,
+          new_coords: [each.top / 50, each.left / 50]
+        };
+        socket.emit('move token', move_obj);
       }
     });
-    console.log(items)
+    //console.log(items)
     socket.emit('client map update', items);
   }
   canvas.on('object:modified', function(options) {
@@ -100,14 +118,28 @@ $(function () {
         top: test[element].coords[1] * 50,
         width: 50,
         height: 50,
-        fill: '#faa',
+        fill: '#ADFF2F',
         originX: 'left',
         originY: 'top',
         centeredRotation: true,
         uuid: test[element].uuid
       });
+
       squares.push(new_rect);
       canvas.add(new_rect);
+      if ('tokens' in test[element]){
+        console.log(test[element].tokens);
+        new_circle = new fabric.Circle({
+          radius: 25,
+          fill: 'red',
+          left: test[element].coords[0] * 50,
+          top: test[element].coords[1] * 50,
+          uuid: test[element].tokens[0].uuid,
+          tile: element,
+          original_coords: test[element].coords
+        });
+        canvas.add(new_circle);
+      }
       new_rect = null;
     });
   });
