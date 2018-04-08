@@ -17,15 +17,20 @@ describe("Token tests", function(){
   it("should be able to move a token to a position with correct tiles", function(){
     let map = setupMap(tile.basicGround);
     let moveArr = [map.tileAtPosition(0,0), map.tileAtPosition(1,1)];
-let tok = new tokenHelper.MovableToken("testToken", "dumbToken", map.tileAtPosition(0,0));
+    let secondMove = [map.tileAtPosition(1,1), map.tileAtPosition(0,0)];
+    let tok = new tokenHelper.MovableToken("testToken", "dumbToken", map.tileAtPosition(0,0));
     tok.move(moveArr);
     assert(map.tileAtPosition(1,1).token === tok);
+    tok.move(secondMove);
+    assert(map.tileAtPosition(1,1).token !== tok);
+    assert(map.tileAtPosition(0,0).token === tok);
   });
 
   it("should not be able to move token to a new position with incorrect tiles", function(){
     let map = setupMap(tile.basicWall);
     let moveArr = [map.tileAtPosition(0,0), map.tileAtPosition(1,1)];
-    let tok = new tokenHelper.MovableToken("testToken", "dumbToken", map.tileAtPosition(0,0));    map.changeTileAt(0,0,tile.basicGround);
+    let tok = new tokenHelper.MovableToken("testToken", "dumbToken", map.tileAtPosition(0,0));
+    map.changeTileAt(0,0,tile.basicGround);
     tok.move(moveArr);
     assert(map.tileAtPosition(1,1).token !== tok);
   });

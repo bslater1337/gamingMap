@@ -72,11 +72,13 @@ $(function () {
           new_coords: [each.top / 50, each.left / 50]
         };
         socket.emit('move token', move_obj);
+        canvas.clear()
       }
     });
     //console.log(items)
     socket.emit('client map update', items);
   }
+
   canvas.on('object:modified', function(options) {
     options.target.set({
       left: Math.round(options.target.left / grid) * grid,
@@ -85,6 +87,39 @@ $(function () {
     updateCanvas(this)
   });
 
+  canvas.on('mouse:down', function(e){
+    if('tile' in e.target){
+      console.log('mousedown on tile ' + e.target.tile);
+      socket.emit('token selected', [e.target.left / 50, e.target.top / 50]);
+    }
+  });
+
+  socket.on("possible moves", function(msg){
+    for(var each in canvas._objects){
+        msg.forEach(function(element){
+           if(canvas._objects[each].uuid === element){
+               console.log(canvas._objects[each]);
+               let thing = new fabric.Rect({
+                   left: canvas._objects[each].left,
+                   top: canvas._objects[each].top ,
+                   width: 50,
+                   height: 50,
+                   fill: "FFFFFF",
+                   originX: 'left',
+                   originY: 'top',
+                   centeredRotation: true,
+                   id: i
+               });
+               canvas.add(thing);
+               //canvas._objects[each].fill = "FFFFFF";
+               //console.log(canvas._objects[each]);
+               //canvas.renderAll();
+               //updateCanvas()
+           }
+        });
+    }
+    canvas.renderAll();
+  });
 
   $('form').submit(function(){
     socket.emit('chat message', $('#m').val());
@@ -108,10 +143,11 @@ $(function () {
  	});
 
   socket.on('server map update', function(msg){
-    var test = msg.map
+    test = null;
+    test = msg.map;
     canvas.clear()
     createGrid();
-    console.log(test)
+    console.log('clearing canvas')
     Object.keys(test).forEach(function(element){
       let new_rect = new fabric.Rect({
         left: test[element].coords[0] * 50,
@@ -126,6 +162,7 @@ $(function () {
       });
 
       squares.push(new_rect);
+      new_rect.hasControls = false;
       canvas.add(new_rect);
       if ('tokens' in test[element]){
         console.log(test[element].tokens);

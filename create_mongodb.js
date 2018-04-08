@@ -26,7 +26,7 @@ MongoClient.connect(url, function(err, db) {
   //   db.close();
   // });
   var test_map = setupMap(tile.basicGround);
-  var test_token = new token.MovableToken("TOKEN", "test", test_map.tileAtPosition(0, 0), 3);
+  var test_token = new token.MovableToken("TOKEN", "test", test_map.tileAtPosition(3, 3), 3);
   var serial_map = test_map.serialized;
   var obj = { name: 'test_map', serial_map}
   dbo.collection("maps").insertOne(obj, function(err, res) {
