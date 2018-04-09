@@ -65,14 +65,15 @@ $(function () {
 
     });
     items.forEach(function(each){
-      if(each.top != each.old_coords[0] * 50 || each.left != each.old_coords[1] * 50){
+        console.log(each.old_coords);
+      if(each.top !== each.old_coords[1] * 50 || each.left !== each.old_coords[0] * 50){
         move_obj = {
           tile: each.tile,
           old_coords: each.old_coords,
           new_coords: [each.top / 50, each.left / 50]
         };
-        socket.emit('move token', move_obj);
         canvas.clear()
+        socket.emit('move token', move_obj);
       }
     });
     //console.log(items)
@@ -90,7 +91,7 @@ $(function () {
   canvas.on('mouse:down', function(e){
     if('tile' in e.target){
       console.log('mousedown on tile ' + e.target.tile);
-      socket.emit('token selected', [e.target.left / 50, e.target.top / 50]);
+      socket.emit('token selected', [e.target.top / 50, e.target.left / 50]);
     }
   });
 
@@ -98,7 +99,7 @@ $(function () {
     for(var each in canvas._objects){
         msg.forEach(function(element){
            if(canvas._objects[each].uuid === element){
-               console.log(canvas._objects[each]);
+               //console.log(canvas._objects[each]);
                let thing = new fabric.Rect({
                    left: canvas._objects[each].left,
                    top: canvas._objects[each].top ,
@@ -147,11 +148,15 @@ $(function () {
     test = msg.map;
     canvas.clear()
     createGrid();
-    console.log('clearing canvas')
+    tokens_to_write = []
+    console.log('clearing canvas');
+    //console.log(test);
     Object.keys(test).forEach(function(element){
+        console.log(test[element].coords);
+        console.log(test[element].uuid);
       let new_rect = new fabric.Rect({
-        left: test[element].coords[0] * 50,
-        top: test[element].coords[1] * 50,
+        left: test[element].coords[1] * 50,
+        top: test[element].coords[0] * 50,
         width: 50,
         height: 50,
         fill: '#ADFF2F',
@@ -165,20 +170,24 @@ $(function () {
       new_rect.hasControls = false;
       canvas.add(new_rect);
       if ('tokens' in test[element]){
-        console.log(test[element].tokens);
+        //console.log(test[element].tokens);
         new_circle = new fabric.Circle({
           radius: 25,
           fill: 'red',
-          left: test[element].coords[0] * 50,
-          top: test[element].coords[1] * 50,
+          left: test[element].coords[1] * 50,
+          top: test[element].coords[0] * 50,
           uuid: test[element].tokens[0].uuid,
           tile: element,
           original_coords: test[element].coords
         });
-        canvas.add(new_circle);
+        tokens_to_write.push(new_circle);
+        //canvas.add(new_circle);
       }
       new_rect = null;
     });
+    tokens_to_write.forEach(function(element){
+        canvas.add(element);
+    })
   });
 
   function login(message){

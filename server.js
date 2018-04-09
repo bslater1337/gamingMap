@@ -1,24 +1,24 @@
-var path = require('path');
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var MongoClient = require("mongodb").MongoClient;
-var ObjectID = require("mongodb").ObjectID;
+let path = require('path');
+let express = require('express');
+let app = express();
+let http = require('http').Server(app);
+let io = require('socket.io')(http);
+let MongoClient = require("mongodb").MongoClient;
+let ObjectID = require("mongodb").ObjectID;
 const token = require('./token.js');
 const tile = require("./tiles.js");
 const attacks = require('./attacks.js');
 
-var url = "mongodb://localhost:27017/";
-var players = [];
-var dbo;
-var game_map;
+let url = "mongodb://localhost:27017/";
+let players = [];
+let dbo;
+let game_map;
 
 
 setupMap = function(thing){
-  var map = new tile.board();
-  for(var i = 0; i < 12; i++){
-    for(var j = 0; j < 12; j++){
+  let map = new tile.board();
+  for(let i = 0; i < 12; i++){
+    for(let j = 0; j < 12; j++){
       _ = new tile.basicGround(i, j, map);
     }
   }
@@ -29,7 +29,7 @@ setupMap = function(thing){
 app.use(express.static(path.join(__dirname, 'public')));
 
 function userQuery(db, userName, callback) {
-	var collection = db.collection("users");
+	let collection = db.collection("users");
 	collection.find({name: userName}).toArray(function(err, docs) {
 		if (err != null) {
 			console.log("Error on attempting to find: " + err);
@@ -42,7 +42,7 @@ function userQuery(db, userName, callback) {
 }
 
 function mapQuery(db, map_name, callback) {
-	var collection = db.collection("maps");
+	let collection = db.collection("maps");
 	collection.find({name: map_name}).toArray(function(err, docs) {
 		if (err != null) {
 			console.log("Error on attempting to find: " + err);
@@ -56,7 +56,7 @@ function mapQuery(db, map_name, callback) {
 
 
 function createUser(db, userName, passWord, callback){ //we don't have to check for uniqueness in UN here
-	var collection = db.collection("users");
+	let collection = db.collection("users");
 	collection.insertOne({name : userName, password: passWord}, function(err, result){
 		if (err!=null) callback("error");
 		else callback(result);
@@ -71,16 +71,14 @@ io.on('connection', function(socket){
 	// 			return;
 	// 		}
 	// 		else{
-	// 			var serialmap = result[0].serial_map
+	// 			let serialmap = result[0].serial_map
 	// 			game_map = tile.fromSerialized(serialmap);
 	// 			io.emit('server map update', game_map.serialized);
 	// 		}
 	// });
 	game_map = setupMap(tile.basicGround);
 	console.log('\n');
-  let test_token = new token.MovableToken("TOKEN", "test token", game_map.tileAtPosition(3, 3), 2);
-	// console.log(test_token);
-	// console.log(test_token.possibleDestinations.length)
+  let test_token = new token.MovableToken("TOKEN", "test token", game_map.tileAtPosition(1, 1), 3);
 }
   function getPlayerIndexBySocket(socket){
 		return players.map(function(e) { return e.socketid; }).indexOf(socket);
@@ -91,7 +89,13 @@ io.on('connection', function(socket){
   console.log('a user connected');
 
   socket.on('chat message', function(msg){
-    var message = players[getPlayerIndexBySocket(socket)].name + ": "+ msg;
+      let message = '';
+      if(getPlayerIndexBySocket(socket) < 0){
+          message = 'somebody' + ": "+ msg;
+      }
+    else{
+          message = players[getPlayerIndexBySocket(socket)].name + ": "+ msg;
+      }
     io.emit('chat message', message);
     console.log(message)
   });
@@ -100,14 +104,14 @@ io.on('connection', function(socket){
 		console.log('moving token')
 		console.log(move_obj.old_coords);
 		console.log(move_obj.new_coords);
-		var old_tile = game_map.tileAtPosition(move_obj.old_coords[1], move_obj.old_coords[0]);
-		var new_tile = game_map.tileAtPosition(move_obj.new_coords[1], move_obj.new_coords[0]);
-		var move_array = [old_tile, new_tile];
+		let old_tile = game_map.tileAtPosition(move_obj.old_coords[0], move_obj.old_coords[1]);
+		let new_tile = game_map.tileAtPosition(move_obj.new_coords[0], move_obj.new_coords[1]);
+		let move_array = [old_tile, new_tile];
 		//console.log(move_array);
 		if ('token' in old_tile && old_tile.token != null){
-			var token_obj = old_tile.token;
-			var dest = old_tile.token.possibleDestinations;
-			var uuids = []
+			let token_obj = old_tile.token;
+			let dest = old_tile.token.possibleDestinations;
+			let uuids = []
 			dest.forEach(function(element){
 				uuids.push(element.UUID)
 			});
@@ -116,22 +120,28 @@ io.on('connection', function(socket){
 				token_obj.tile = new_tile;
 				new_tile.token = token_obj;
 				old_tile.token = null;
+				game_map = game_map;
 			}
+
 
 			//old_tile.token.move(move_array);
 			//console.log('new tile token is')
 			//console.log(new_tile.token);
 		}
+		else if(!('token' in old_tile) || old_tile.token ===null){
+		    console.log('no token')
+
+        }
 		io.emit('server map update', game_map.serialized);
   });
 
 	socket.on('token selected', function(tile_coords){
 		console.log('mousedown');
 		//console.log(move_obj);
-		var current_tile = game_map.tileAtPosition(tile_coords[0], tile_coords[1])
+		let current_tile = game_map.tileAtPosition(tile_coords[0], tile_coords[1])
 		console.log(current_tile)
-		var moves_obj = current_tile.token.possibleDestinations;
-		var move_uuids = [];
+		let moves_obj = current_tile.token.possibleDestinations;
+		let move_uuids = [];
         moves_obj.forEach(function(element){
             move_uuids.push(element.UUID)
         });
@@ -156,7 +166,7 @@ io.on('connection', function(socket){
 				return;
 			}
 			if (result.length>0 && credentials.message=="login"){
-				var indexOfUser = getPlayerIndexByName(credentials.username);
+				let indexOfUser = getPlayerIndexByName(credentials.username);
 				if (indexOfUser!=-1) {
 					socket.emit("loginValidation", false);
 				}
