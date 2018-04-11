@@ -152,19 +152,35 @@ $(function () {
     console.log('clearing canvas');
     //console.log(test);
     Object.keys(test).forEach(function(element){
-        console.log(test[element].coords);
-        console.log(test[element].uuid);
-      let new_rect = new fabric.Rect({
-        left: test[element].coords[1] * 50,
-        top: test[element].coords[0] * 50,
-        width: 50,
-        height: 50,
-        fill: '#ADFF2F',
-        originX: 'left',
-        originY: 'top',
-        centeredRotation: true,
-        uuid: test[element].uuid
-      });
+        //console.log(test[element]);
+        //console.log(test[element].uuid);
+        let new_rect = null;
+        if(test[element].type === "basicWall"){
+            new_rect = new fabric.Rect({
+                left: test[element].coords[1] * 50,
+                top: test[element].coords[0] * 50,
+                width: 50,
+                height: 50,
+                fill: '#888888',
+                originX: 'left',
+                originY: 'top',
+                centeredRotation: true,
+                uuid: test[element].uuid
+            });
+        }
+        else {
+            new_rect = new fabric.Rect({
+                left: test[element].coords[1] * 50,
+                top: test[element].coords[0] * 50,
+                width: 50,
+                height: 50,
+                fill: '#ADFF2F',
+                originX: 'left',
+                originY: 'top',
+                centeredRotation: true,
+                uuid: test[element].uuid
+            });
+        }
 
       squares.push(new_rect);
       new_rect.hasControls = false;

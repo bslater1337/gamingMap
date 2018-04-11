@@ -78,7 +78,12 @@ io.on('connection', function(socket){
 	// });
 	game_map = setupMap(tile.basicGround);
 	console.log('\n');
-  let test_token = new token.MovableToken("TOKEN", "test token", game_map.tileAtPosition(1, 1), 3);
+	let wall_1 = new tile.basicWall(1, 0, game_map);
+    let wall_2 = new tile.basicWall(1, 1, game_map);
+    let wall_3 = new tile.basicWall(1, 2, game_map);
+    let portal = new tile.basicGround(0, 0, game_map);
+    let startTile = new tile.basicGround(5, 5, game_map, [portal]);
+	let test_token = new token.MovableToken("TOKEN", "test token", game_map.tileAtPosition(3, 3), 3);
 }
   function getPlayerIndexBySocket(socket){
 		return players.map(function(e) { return e.socketid; }).indexOf(socket);

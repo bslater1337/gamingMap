@@ -27,6 +27,12 @@ MongoClient.connect(url, function(err, db) {
   // });
   var test_map = setupMap(tile.basicGround);
   var test_token = new token.MovableToken("TOKEN", "test", test_map.tileAtPosition(3, 3), 3);
+
+  let wall_1 = new tile.basicWall(1, 0, game_map);
+  let wall_2 = new tile.basicWall(1, 1, game_map);
+  let wall_3 = new tile.basicWall(1, 2, game_map);
+  //let portal = new tile.basicGround(0, 0, game_map);
+  //let startTile = new tile.basicGround(5, 5, game_map, [portal]);
   var serial_map = test_map.serialized;
   var obj = { name: 'test_map', serial_map}
   dbo.collection("maps").insertOne(obj, function(err, res) {
