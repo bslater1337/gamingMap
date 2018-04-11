@@ -8,6 +8,9 @@ let ObjectID = require("mongodb").ObjectID;
 const token = require('./token.js');
 const tile = require("./tiles.js");
 const attacks = require('./attacks.js');
+const SHA256 = require("crypto-js/sha256");
+
+//use SHA256 encryption by doing the following SHA256("Message")
 
 let url = "mongodb://localhost:27017/";
 let players = [];
