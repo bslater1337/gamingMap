@@ -134,15 +134,16 @@ exports.MovableToken = class MovableToken extends exports.Token {
     }
 };
 
-exports.AttackingToken = class AttackingToken extends exports.MovableToken {
-  constructor(name, type, tile, movementSpeed, hp, attack){
-    super(name, type, tile, movementSpeed);
-    this.attack = {};
-    //addAttack(attack);
-    this.health = hp;
-  }
 
-  get serialized()  {
+exports.AttackingToken = class AttackingToken extends exports.MovableToken {
+    constructor(name, type, tile, movementSpeed, hp, attack){
+        super(name, type, tile, movementSpeed);
+        this.attack = {};
+        //addAttack(attack);
+        this.health = hp;
+    }
+
+      get serialized()  {
       let ret = super.serialized;
       ret['class'] = 'AttackingToken';
       return ret;
@@ -154,14 +155,17 @@ exports.AttackingToken = class AttackingToken extends exports.MovableToken {
       return ret;
   }
 
-  get possibleAttacks(){
-    let destination = this.getRange(this.attack.range);
-    return destination;
-  }
-  hit(name, defender){
-    this.attack[name].effects(this, defender);
-  }
-  takeDamage(damage){
-    this.health -= damage;
-  }
+    addAttack(name, attack){
+        this.attack[name] = attack;
+    }
+    getPossibleAttacks(attack){
+        let destination = this.getRange(attack.range);
+        return destination;
+    }
+    hit(name, defender){
+        this.attack[name].effects(this, defender);
+    }
+    takeDamage(damage){
+        this.health -= damage;
+    }
 };
