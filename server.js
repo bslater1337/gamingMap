@@ -124,6 +124,8 @@ io.on('connection', function(socket){
 				uuids.push(element.UUID)
 			});
 			if(uuids.includes(new_tile.UUID)){
+                // token_obj.simpleMove(new_tile);
+                // game_map = game_map;
 				console.log(true)
 				token_obj.tile = new_tile;
 				new_tile.token = token_obj;

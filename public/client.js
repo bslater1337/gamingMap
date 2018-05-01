@@ -182,6 +182,19 @@ $(function () {
                 uuid: test[element].uuid
             });
         }
+        else if ('special_neighbors' in test[element]){
+            new_rect = new fabric.Rect({
+                left: test[element].coords[1] * 50,
+                top: test[element].coords[0] * 50,
+                width: 50,
+                height: 50,
+                fill: '#0000ff',
+                originX: 'left',
+                originY: 'top',
+                centeredRotation: true,
+                uuid: test[element].uuid
+            });
+        }
         else {
             new_rect = new fabric.Rect({
                 left: test[element].coords[1] * 50,

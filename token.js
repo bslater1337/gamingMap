@@ -129,7 +129,9 @@ exports.MovableToken = class MovableToken extends exports.Token {
     }
 
     simpleMove(destination_tile){
-        if(this.tile.neighbors.indexOf(destination_tile) >= 0){
+        let tiles_in_range = this.possibleDestinations;
+        console.log(tiles_in_range.length);
+        if(tiles_in_range.indexOf(destination_tile) >= 0){
             this.tile.token = null;
             this.tile = destination_tile;
             destination_tile.token = this;

@@ -18,7 +18,7 @@ describe("Token tests", function(){
     let map = setupMap(tile.basicGround);
     let moveArr = [map.tileAtPosition(0,0), map.tileAtPosition(1,1)];
     let secondMove = [map.tileAtPosition(1,1), map.tileAtPosition(0,0)];
-    let tok = new tokenHelper.MovableToken("testToken", "dumbToken", map.tileAtPosition(0,0));
+    let tok = new tokenHelper.MovableToken("testToken", "dumbToken", map.tileAtPosition(0,0), 3);
     tok.move(moveArr);
     assert(map.tileAtPosition(1,1).token === tok);
     tok.move(secondMove);
