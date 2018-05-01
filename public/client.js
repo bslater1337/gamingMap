@@ -94,6 +94,20 @@ $(function () {
       socket.emit('token selected', [e.target.top / 50, e.target.left / 50]);
     }
   });
+  canvas.on('mouse:dblclick', function(e){
+      let conf = window.confirm('Change Tile?');
+      if ( conf == true){
+          msg = {
+              x: e.target.top / 50,
+              y: e.target.left / 50
+          };
+          console.log(msg.x + " " + msg.y)
+          socket.emit("changeTile", msg)
+      }
+      else{
+          console.log('cancle pressed');
+      }
+  });
 
   socket.on("possible moves", function(msg){
     for(var each in canvas._objects){

@@ -156,6 +156,16 @@ io.on('connection', function(socket){
 		io.emit("possible moves", move_uuids);
 	});
 
+    socket.on('changeTile', function(tile_coords){
+        if(game_map.tileAtPosition(tile_coords.x, tile_coords.y) instanceof tile.basicWall){
+            let _ = new tile.basicGround(tile_coords.x, tile_coords.y, game_map);
+        }
+        else{
+            let _ = new tile.basicWall(tile_coords.x, tile_coords.y, game_map);
+        }
+        io.emit('server map update', game_map.serialized);
+    });
+
   socket.on('client map update', function(msg){
     io.emit('server map update', game_map.serialized);
     console.log(msg)
