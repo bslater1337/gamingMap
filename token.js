@@ -128,6 +128,14 @@ exports.MovableToken = class MovableToken extends exports.Token {
         }
     }
 
+    simpleMove(destination_tile){
+        if(this.tile.neighbors.indexOf(destination_tile) >= 0){
+            this.tile.token = null;
+            this.tile = destination_tile;
+            destination_tile.token = this;
+        }
+    }
+
     get possibleDestinations()  {
       let destinations = this.getRange(this.movementSpeed);
       return destinations;

@@ -24,6 +24,9 @@ describe("Token tests", function(){
     tok.move(secondMove);
     assert(map.tileAtPosition(1,1).token !== tok);
     assert(map.tileAtPosition(0,0).token === tok);
+    tok.simpleMove(map.tileAtPosition(0, 1));
+    assert(map.tileAtPosition(0, 1).token === tok);
+    assert(map.tileAtPosition(0, 0).token !== tok);
   });
 
   it("should not be able to move token to a new position with incorrect tiles", function(){
