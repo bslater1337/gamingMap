@@ -75,7 +75,7 @@ $(function () {
           old_coords: each.old_coords,
           new_coords: [each.top / 50, each.left / 50]
         };
-        canvas.clear()
+        //canvas.clear()
         socket.emit('move token', move_obj);
       }
     });
