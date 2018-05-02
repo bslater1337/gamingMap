@@ -8,6 +8,9 @@ $(function () {
   var canvas = new fabric.Canvas('c', { selection: false });
   var grid = 50;
   var squares = [];
+  $('#c').hide();
+  $("#m").hide();
+  $('#messages').hide();
   // create grid
   function createGrid(){
     for (var i = 0; i < (600 / grid); i++) {
@@ -148,9 +151,10 @@ $(function () {
   socket.on("loginValidation", function(msg){  //server returns boolean - success
  		if(msg){ //this should only happen on a valid login
  			$("#loginScreen").hide();
- 		  //$("#rules").hide();
- 			//$(".userTable").show();
- 			//$("#ready").show();
+ 			$("#c").show();
+            $("#m").show();
+            $('#messages').show();
+ 			socket.emit('client map update', []);
  		}
  		else{
  			alert("Username may be taken or password may be incorrect, try again.");
@@ -229,18 +233,47 @@ $(function () {
       new_rect.hasControls = false;
       canvas.add(new_rect);
       if ('tokens' in test[element]){
-        //console.log(test[element].tokens);
-        let text = test[element].tokens[0].name;
-        console.log(text);
-        let text_box = new fabric.Text(text, {
+          var circle = new fabric.Circle({
+            radius: 25,
+            fill: 'red',
+            //scaleY: 0.5,
+            originX: 'center',
+            originY: 'center'
+          });
+          let tok_name = test[element].tokens[0].name;
+          var text = new fabric.Text(tok_name, {
             textBackgroundColor: 'rgb(0,180,0)',
-            left: test[element].coords[1] * 50,
-            top: test[element].coords[0] * 50,
-            uuid: test[element].tokens[0].uuid,
-            tile: element,
-            original_coords: test[element].coords,
-            fontSize: 12
-        });
+            // left: test[element].coords[1] * 50,
+            // top: test[element].coords[0] * 50,
+            // uuid: test[element].tokens[0].uuid,
+            // tile: element,
+            // original_coords: test[element].coords,
+            fontSize: 12,
+            originX: 'center',
+            originY: 'center'
+          });
+
+          var group = new fabric.Group([ circle, text ], {
+              left: test[element].coords[1] * 50,
+              top: test[element].coords[0] * 50,
+              uuid: test[element].tokens[0].uuid,
+              tile: element,
+              original_coords: test[element].coords
+          });
+
+          canvas.add(group);
+        //console.log(test[element].tokens);
+        // let text = test[element].tokens[0].name;
+        // console.log(text);
+        // let text_box = new fabric.Text(text, {
+        //     textBackgroundColor: 'rgb(0,180,0)',
+        //     left: test[element].coords[1] * 50,
+        //     top: test[element].coords[0] * 50,
+        //     uuid: test[element].tokens[0].uuid,
+        //     tile: element,
+        //     original_coords: test[element].coords,
+        //     fontSize: 12
+        // });
         // new_circle = new fabric.Circle({
         //   radius: 25,
         //   fill: 'red',
@@ -251,7 +284,7 @@ $(function () {
         //   original_coords: test[element].coords
         // });
         // tokens_to_write.push(new_circle);
-        canvas.add(text_box);
+        // canvas.add(text_box);
       }
       new_rect = null;
     });
