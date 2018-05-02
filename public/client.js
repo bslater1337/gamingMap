@@ -169,20 +169,7 @@ $(function () {
         //console.log(test[element]);
         //console.log(test[element].uuid);
         let new_rect = null;
-        if(test[element].type === "basicWall"){
-            new_rect = new fabric.Rect({
-                left: test[element].coords[1] * 50,
-                top: test[element].coords[0] * 50,
-                width: 50,
-                height: 50,
-                fill: '#888888',
-                originX: 'left',
-                originY: 'top',
-                centeredRotation: true,
-                uuid: test[element].uuid
-            });
-        }
-        else if ('special_neighbors' in test[element]){
+        if('special_neighbors' in test[element]){
             new_rect = new fabric.Rect({
                 left: test[element].coords[1] * 50,
                 top: test[element].coords[0] * 50,
@@ -195,13 +182,42 @@ $(function () {
                 uuid: test[element].uuid
             });
         }
-        else {
+        else if(test[element].type === "basicGround"){
             new_rect = new fabric.Rect({
                 left: test[element].coords[1] * 50,
                 top: test[element].coords[0] * 50,
                 width: 50,
                 height: 50,
                 fill: '#ADFF2F',
+                // fill: '#888888',
+                originX: 'left',
+                originY: 'top',
+                centeredRotation: true,
+                uuid: test[element].uuid
+            });
+        }
+        // else if ('special_neighbors' in test[element]){
+        //     new_rect = new fabric.Rect({
+        //         left: test[element].coords[1] * 50,
+        //         top: test[element].coords[0] * 50,
+        //         width: 50,
+        //         height: 50,
+        //         fill: '#0000ff',
+        //         originX: 'left',
+        //         originY: 'top',
+        //         centeredRotation: true,
+        //         uuid: test[element].uuid
+        //     });
+        // }
+        else {
+            console.log('wall');
+            new_rect = new fabric.Rect({
+                left: test[element].coords[1] * 50,
+                top: test[element].coords[0] * 50,
+                width: 50,
+                height: 50,
+                fill: '#888888',
+                // fill: '#ADFF2F',
                 originX: 'left',
                 originY: 'top',
                 centeredRotation: true,
@@ -214,17 +230,28 @@ $(function () {
       canvas.add(new_rect);
       if ('tokens' in test[element]){
         //console.log(test[element].tokens);
-        new_circle = new fabric.Circle({
-          radius: 25,
-          fill: 'red',
-          left: test[element].coords[1] * 50,
-          top: test[element].coords[0] * 50,
-          uuid: test[element].tokens[0].uuid,
-          tile: element,
-          original_coords: test[element].coords
+        let text = test[element].tokens[0].name;
+        console.log(text);
+        let text_box = new fabric.Text(text, {
+            textBackgroundColor: 'rgb(0,180,0)',
+            left: test[element].coords[1] * 50,
+            top: test[element].coords[0] * 50,
+            uuid: test[element].tokens[0].uuid,
+            tile: element,
+            original_coords: test[element].coords,
+            fontSize: 12
         });
-        tokens_to_write.push(new_circle);
-        //canvas.add(new_circle);
+        // new_circle = new fabric.Circle({
+        //   radius: 25,
+        //   fill: 'red',
+        //   left: test[element].coords[1] * 50,
+        //   top: test[element].coords[0] * 50,
+        //   uuid: test[element].tokens[0].uuid,
+        //   tile: element,
+        //   original_coords: test[element].coords
+        // });
+        // tokens_to_write.push(new_circle);
+        canvas.add(text_box);
       }
       new_rect = null;
     });

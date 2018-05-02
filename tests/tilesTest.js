@@ -76,6 +76,7 @@ describe("tiles", function(){
     let ground = new tile.basicGround(0, 0, test_map);
     let portal = new tile.basicGround(17, 17, test_map);
     let startTile = new tile.basicGround(1, 1, test_map, [portal]);
+    let wallTile = new tile.basicWall(2, 2, test_map);
     let tok = new tokenHelper.MovableToken("testToken", "dumbToken", test_map.tileAtPosition(0,0));
     serial_map = test_map.serialized;
     new_map = tile.fromSerialized(serial_map);
@@ -84,6 +85,7 @@ describe("tiles", function(){
     let test =  new_map.tileAtPosition(1,1)
     let test1 =  new_map.tileAtPosition(1,1).special_neighbors
     assert(new_map.tileAtPosition(1,1).special_neighbors[0] instanceof tile.Tile);
+    assert(new_map.tileAtPosition(2, 2) instanceof tile.basicWall);
 
   });
 

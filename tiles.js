@@ -176,7 +176,7 @@ exports.recreateTile = function recreateTile(board, hash, serialized)   {
         return tile;
     }
     else if(serialized['type'] === 'basicWall'){
-      let tile = new exports.basicGround(...serialized['coords'], board, serialized['special_neighbors']);
+      let tile = new exports.basicWall(...serialized['coords'], board, serialized['special_neighbors']);
       tile.UUID = serialized['uuid'];
       tile.color = serialized['color'];
       tile.difficultTurrain = serialized['difficultTurrain'];

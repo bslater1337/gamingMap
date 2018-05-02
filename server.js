@@ -57,6 +57,21 @@ function mapQuery(db, map_name, callback) {
 	});
 }
 
+function mapUpdate(db, map_name, callback) {
+	let collection = db.collection("maps");
+    var serial_map = game_map.serialized;
+    new_map_state = {name: map_name, serial_map}
+	collection.updateOne({name: map_name}, {$set: new_map_state}, function(err, docs) {
+		if (err != null) {
+			console.log("Error on attempting to find: " + err);
+			callback("error"); //error on trying to query the db
+		}
+		else{
+          console.log('updated mapdb'); //the docs object is null if the name doesn't exist
+    }
+	});
+}
+
 
 function createUser(db, userName, passWord, callback){ //we don't have to check for uniqueness in UN here
 	let collection = db.collection("users");
@@ -69,24 +84,25 @@ function createUser(db, userName, passWord, callback){ //we don't have to check 
 io.on('connection', function(socket){
 
 	if(game_map == null){
-	// 	mapQuery(dbo, "test_map", function(result){
-	// 		if (result == "error"){
-	// 			return;
-	// 		}
-	// 		else{
-	// 			let serialmap = result[0].serial_map
-	// 			game_map = tile.fromSerialized(serialmap);
-	// 			io.emit('server map update', game_map.serialized);
-	// 		}
-	// });
-	game_map = setupMap(tile.basicGround);
-	console.log('\n');
-	let wall_1 = new tile.basicWall(1, 0, game_map);
-    let wall_2 = new tile.basicWall(1, 1, game_map);
-    let wall_3 = new tile.basicWall(1, 2, game_map);
-    let portal = new tile.basicGround(0, 0, game_map);
-    let startTile = new tile.basicGround(5, 5, game_map, [portal]);
-	let test_token = new token.MovableToken("TOKEN", "test token", game_map.tileAtPosition(3, 3), 3);
+		mapQuery(dbo, "test_map", function(result){
+			if (result == "error"){
+				return;
+			}
+			else{
+				let serialmap = result[0].serial_map
+				game_map = tile.fromSerialized(serialmap);
+				io.emit('server map update', game_map.serialized);
+			}
+	});
+	// game_map = setupMap(tile.basicGround);
+	// console.log('\n');
+	// let wall_1 = new tile.basicWall(1, 0, game_map);
+    // let wall_2 = new tile.basicWall(1, 1, game_map);
+    // let wall_3 = new tile.basicWall(1, 2, game_map);
+    // let portal = new tile.basicGround(0, 0, game_map);
+    // let startTile = new tile.basicGround(5, 5, game_map, [portal]);
+	// let test_token = new token.MovableToken("TOKEN", "test token", game_map.tileAtPosition(3, 3), 3);
+    // let bat_token = new token.MovableToken("batman", "test token", game_map.tileAtPosition(0, 0), 5);
 }
   function getPlayerIndexBySocket(socket){
 		return players.map(function(e) { return e.socketid; }).indexOf(socket);
@@ -124,12 +140,7 @@ io.on('connection', function(socket){
 				uuids.push(element.UUID)
 			});
 			if(uuids.includes(new_tile.UUID)){
-                // token_obj.simpleMove(new_tile);
-                // game_map = game_map;
-				console.log(true)
-				token_obj.tile = new_tile;
-				new_tile.token = token_obj;
-				old_tile.token = null;
+                token_obj.simpleMove(new_tile);
 				game_map = game_map;
 			}
 
@@ -143,6 +154,14 @@ io.on('connection', function(socket){
 
         }
 		io.emit('server map update', game_map.serialized);
+        mapUpdate(dbo, "test_map", function(result){
+			if (result == "error"){
+				return;
+			}
+            else {
+                console.log('updated map');
+            }
+        });
   });
 
 	socket.on('token selected', function(tile_coords){
@@ -166,10 +185,26 @@ io.on('connection', function(socket){
             let _ = new tile.basicWall(tile_coords.x, tile_coords.y, game_map);
         }
         io.emit('server map update', game_map.serialized);
+        mapUpdate(dbo, "test_map", function(result){
+			if (result == "error"){
+				return;
+			}
+            else {
+                console.log('updated map');
+            }
+        });
     });
 
   socket.on('client map update', function(msg){
     io.emit('server map update', game_map.serialized);
+    mapUpdate(dbo, "test_map", function(result){
+        if (result == "error"){
+            return;
+        }
+        else {
+            console.log('updated map');
+        }
+    });
     console.log(msg)
   })
   socket.on('disconnect', function(){
