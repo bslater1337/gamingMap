@@ -94,15 +94,6 @@ io.on('connection', function(socket){
 				io.emit('server map update', game_map.serialized);
 			}
 	});
-	// game_map = setupMap(tile.basicGround);
-	// console.log('\n');
-	// let wall_1 = new tile.basicWall(1, 0, game_map);
-    // let wall_2 = new tile.basicWall(1, 1, game_map);
-    // let wall_3 = new tile.basicWall(1, 2, game_map);
-    // let portal = new tile.basicGround(0, 0, game_map);
-    // let startTile = new tile.basicGround(5, 5, game_map, [portal]);
-	// let test_token = new token.MovableToken("TOKEN", "test token", game_map.tileAtPosition(3, 3), 3);
-    // let bat_token = new token.MovableToken("batman", "test token", game_map.tileAtPosition(0, 0), 5);
 }
   function getPlayerIndexBySocket(socket){
 		return players.map(function(e) { return e.socketid; }).indexOf(socket);
@@ -144,10 +135,6 @@ io.on('connection', function(socket){
 				game_map = game_map;
 			}
 
-
-			//old_tile.token.move(move_array);
-			//console.log('new tile token is')
-			//console.log(new_tile.token);
 		}
 		else if(!('token' in old_tile) || old_tile.token ===null){
 		    console.log('no token')
@@ -252,7 +239,6 @@ io.on('connection', function(socket){
 		});
   });
 });
-
 
 
 MongoClient.connect(url, function(err, db) {

@@ -28,28 +28,7 @@ $(function () {
 		.replace(/'/g, "&#39;");
 }
   createGrid();
-  //add objects This for loop will create test objects for the GUI
-  for(i=0; i < 4; i++){
-    let test = new fabric.Rect({
-      left: i * 100,
-      top: i * 100,
-      width: 50,
-      height: 50,
-      fill: '#faa',
-      originX: 'left',
-      originY: 'top',
-      centeredRotation: true,
-      id: i
-    });
-    squares.push(test);
-    test = null;
-  }
 
-  //console.log(canvas);
-  squares.forEach(function(element){
-    canvas.add(element)
-  });
-  // snap to grid
   function updateCanvas(grid){
     //console.log(grid);
     let items = [];
@@ -129,10 +108,6 @@ $(function () {
                    id: i
                });
                canvas.add(thing);
-               //canvas._objects[each].fill = "FFFFFF";
-               //console.log(canvas._objects[each]);
-               //canvas.renderAll();
-               //updateCanvas()
            }
         });
     }
@@ -200,19 +175,6 @@ $(function () {
                 uuid: test[element].uuid
             });
         }
-        // else if ('special_neighbors' in test[element]){
-        //     new_rect = new fabric.Rect({
-        //         left: test[element].coords[1] * 50,
-        //         top: test[element].coords[0] * 50,
-        //         width: 50,
-        //         height: 50,
-        //         fill: '#0000ff',
-        //         originX: 'left',
-        //         originY: 'top',
-        //         centeredRotation: true,
-        //         uuid: test[element].uuid
-        //     });
-        // }
         else {
             console.log('wall');
             new_rect = new fabric.Rect({
@@ -243,11 +205,6 @@ $(function () {
           let tok_name = test[element].tokens[0].name;
           var text = new fabric.Text(tok_name, {
             textBackgroundColor: 'rgb(0,180,0)',
-            // left: test[element].coords[1] * 50,
-            // top: test[element].coords[0] * 50,
-            // uuid: test[element].tokens[0].uuid,
-            // tile: element,
-            // original_coords: test[element].coords,
             fontSize: 12,
             originX: 'center',
             originY: 'center'
@@ -262,29 +219,7 @@ $(function () {
           });
 
           canvas.add(group);
-        //console.log(test[element].tokens);
-        // let text = test[element].tokens[0].name;
-        // console.log(text);
-        // let text_box = new fabric.Text(text, {
-        //     textBackgroundColor: 'rgb(0,180,0)',
-        //     left: test[element].coords[1] * 50,
-        //     top: test[element].coords[0] * 50,
-        //     uuid: test[element].tokens[0].uuid,
-        //     tile: element,
-        //     original_coords: test[element].coords,
-        //     fontSize: 12
-        // });
-        // new_circle = new fabric.Circle({
-        //   radius: 25,
-        //   fill: 'red',
-        //   left: test[element].coords[1] * 50,
-        //   top: test[element].coords[0] * 50,
-        //   uuid: test[element].tokens[0].uuid,
-        //   tile: element,
-        //   original_coords: test[element].coords
-        // });
-        // tokens_to_write.push(new_circle);
-        // canvas.add(text_box);
+
       }
       new_rect = null;
     });
