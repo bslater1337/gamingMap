@@ -177,11 +177,29 @@ io.on('connection', function(socket){
 		io.emit("possible moves", move_uuids);
 	});
 
+    socket.on('add_token', function(token_msg){
+        if(game_map.tileAtPosition(token_msg.x, token_msg.y).token === null){
+            let tile_to_use = game_map.tileAtPosition(token_msg.x, token_msg.y);
+            let _ = new token.MovableToken(token_msg.name, "test_token", tile_to_use, 3)
+        }
+        io.emit('server map update', game_map.serialized);
+        mapUpdate(dbo, "test_map", function(result){
+			if (result == "error"){
+				return;
+			}
+            else {
+                console.log('updated map');
+            }
+        });
+    });
+
     socket.on('changeTile', function(tile_coords){
         if(game_map.tileAtPosition(tile_coords.x, tile_coords.y) instanceof tile.basicWall){
+            game_map.removeTileAt(tile_coords.x, tile_coords.y);
             let _ = new tile.basicGround(tile_coords.x, tile_coords.y, game_map);
         }
         else{
+            game_map.removeTileAt(tile_coords.x, tile_coords.y);
             let _ = new tile.basicWall(tile_coords.x, tile_coords.y, game_map);
         }
         io.emit('server map update', game_map.serialized);

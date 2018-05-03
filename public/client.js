@@ -108,7 +108,21 @@ $(function () {
           socket.emit("changeTile", msg)
       }
       else{
-          console.log('cancle pressed');
+          let token_conf = window.confirm('Add token?');
+          if ( token_conf == true){
+              let token_name = window.prompt("Token name: ","Bruce Wayne?");
+              if (token_name == null || token_name == "") {
+                    console.log("User cancelled the prompt.");
+                } else {
+                    let token_msg = {
+                        x: e.target.top / 50,
+                        y: e.target.left / 50,
+                        name: token_name
+                    }
+                    socket.emit("add_token", token_msg);
+                    //console.log(token_msg)
+                }
+          }
       }
   });
 
